@@ -1,0 +1,316 @@
+/* Estilos globales para la inmobiliaria */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    sans-serif;
+  line-height: 1.6;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Fuentes más gruesas y legibles */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.fw-bold {
+  font-weight: 700 !important;
+}
+
+.fw-semibold {
+  font-weight: 600 !important;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animaciones para hover en cards */
+.property-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.property-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15) !important;
+}
+
+.service-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Efectos de gradiente para botones */
+.btn {
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Animaciones de navbar */
+.custom-navbar {
+  transition: all 0.3s ease;
+}
+
+.custom-navbar.scrolled {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Efectos para iconos */
+.service-icon,
+.contact-icon {
+  transition: all 0.3s ease;
+}
+
+.service-card:hover .service-icon {
+  transform: scale(1.1);
+  box-shadow: 0 10px 30px rgba(111, 66, 193, 0.3);
+}
+
+/* Gradientes personalizados */
+.gradient-primary {
+  background: linear-gradient(135deg, #6f42c1 0%, #4834d4 100%);
+}
+
+.gradient-secondary {
+  background: linear-gradient(135deg, #ff6b35 0%, #f0932b 100%);
+}
+
+.gradient-success {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.gradient-info {
+  background: linear-gradient(135deg, #17a2b8 0%, #6610f2 100%);
+}
+
+.gradient-warning {
+  background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+}
+
+/* Texto con gradiente */
+.text-gradient {
+  background: linear-gradient(135deg, #6f42c1 0%, #ff6b35 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Efectos de blur para elementos decorativos */
+.blur-circle {
+  filter: blur(100px);
+  opacity: 0.6;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .display-3 {
+    font-size: 2.5rem !important;
+  }
+
+  .display-4 {
+    font-size: 2rem !important;
+  }
+
+  .lead {
+    font-size: 1.1rem !important;
+  }
+}
+
+/* Estilos para AOS (animaciones) */
+[data-aos] {
+  pointer-events: none;
+}
+
+[data-aos].aos-animate {
+  pointer-events: auto;
+}
+
+/* Mejoras visuales adicionales */
+.shadow-custom {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+.rounded-custom {
+  border-radius: 20px !important;
+}
+
+/* Efectos de loading para botones */
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Estilos para badges */
+.badge {
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+}
+
+/* Mejoras para formularios y inputs */
+.form-control:focus {
+  border-color: #6f42c1;
+  box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+}
+
+/* Estilos para scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #6f42c1 0%, #ff6b35 100%);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #5a369c 0%, #e55a2b 100%);
+}
+
+/* Animaciones adicionales */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Estilo para elementos destacados */
+.highlight {
+  position: relative;
+  z-index: 1;
+}
+
+.highlight::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(111, 66, 193, 0.1) 0%,
+    rgba(255, 107, 53, 0.1) 100%
+  );
+  border-radius: 10px;
+  z-index: -1;
+}
+
+/* Mejoras para accesibilidad */
+.btn:focus {
+  outline: 2px solid #6f42c1;
+  outline-offset: 2px;
+}
+
+/* Animaciones de entrada */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Estilos para el modal de galería de imágenes en pantalla completa */
+.image-gallery-modal .modal-content {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.fullscreen-carousel .carousel-control-prev,
+.fullscreen-carousel .carousel-control-next {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.fullscreen-carousel .carousel-indicators {
+  display: none !important;
+}
+
+.fullscreen-carousel .carousel-item {
+  transition: transform 0.6s ease-in-out;
+}
+
+/* Animaciones para los controles personalizados */
+.image-gallery-modal button {
+  transition: all 0.3s ease !important;
+}
+
+.image-gallery-modal button:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Estilos para los thumbnails */
+.image-gallery-modal img[style*="cursor: pointer"]:hover {
+  transform: scale(1.1);
+  border-color: #ff6b35 !important;
+  opacity: 1 !important;
+}
+
+/* Responsive para dispositivos móviles */
+@media (max-width: 768px) {
+  .image-gallery-modal .thumbnails-container {
+    padding: 10px !important;
+    bottom: 15px !important;
+  }
+
+  .image-gallery-modal .thumbnails-container img {
+    width: 45px !important;
+    height: 30px !important;
+  }
+
+  .image-gallery-modal .nav-button {
+    width: 45px !important;
+    height: 45px !important;
+  }
+
+  .image-gallery-modal .close-button {
+    width: 40px !important;
+    height: 40px !important;
+    top: 15px !important;
+    right: 15px !important;
+  }
+}
+
+/* Efectos de desvanecimiento para el fondo negro */
+.image-gallery-modal .modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+}
