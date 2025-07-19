@@ -172,24 +172,26 @@ npm install
 **Cambios implementados**:
 
 #### Frontend (`inmobiliaria-UI/src/components/AdminPropertyForm.tsx`)
+
 - ✅ Los datos ahora se envían en la estructura exacta que espera el backend
 - ✅ Ubicación y características se envían como objetos JSON
 - ✅ Eliminada dependencia de transformaciones en el backend
 
 ```javascript
 // ANTES (complejo)
-formData.append('caracteristicas.baños', formData.bathrooms.toString());
+formData.append("caracteristicas.baños", formData.bathrooms.toString());
 
 // AHORA (simple y directo)
 const caracteristicas = {
   habitaciones: formData.bedrooms,
   baños: formData.bathrooms,
-  area: formData.area
+  area: formData.area,
 };
-formData.append('caracteristicas', JSON.stringify(caracteristicas));
+formData.append("caracteristicas", JSON.stringify(caracteristicas));
 ```
 
 #### Backend (`inmobiliaria-BFF/src/middleware/propertyTransform.ts`)
+
 - ✅ Middleware simplificado
 - ✅ Solo parsea objetos JSON que llegan como strings
 - ✅ Eliminada lógica compleja de transformación de campos planos
@@ -202,6 +204,7 @@ if (req.body.caracteristicas && typeof req.body.caracteristicas === "string") {
 ```
 
 **Beneficios obtenidos**:
+
 - 🎯 **Simplicidad**: Código más limpio y mantenible
 - 🚀 **Menos errores**: Eliminadas transformaciones complejas
 - 📊 **Coherencia**: Frontend y backend hablan el mismo "idioma"
@@ -210,6 +213,7 @@ if (req.body.caracteristicas && typeof req.body.caracteristicas === "string") {
 ### ✅ Corrección Campo Baños (v1.1.0)
 
 **Problemas resueltos**:
+
 - ✅ Campo `baños` ahora aparece correctamente en el dashboard
 - ✅ URLs de imágenes corregidas (puerto 5001)
 - ✅ Estilos CSS para contadores agregados
@@ -218,15 +222,57 @@ if (req.body.caracteristicas && typeof req.body.caracteristicas === "string") {
 ### ✅ Sistema Base (v1.0.0)
 
 **Funcionalidades implementadas**:
+
 - ✅ CRUD completo de propiedades
 - ✅ Sistema de autenticación JWT
 - ✅ Upload y gestión de imágenes
 - ✅ Panel de administración React
 - ✅ Base de datos MongoDB
 
+### ✅ Corrección URLs de Imágenes en Edición (v1.3.0)
+
+**Problema resuelto**: Las imágenes existentes aparecían rotas al editar propiedades
+
+**Descripción del problema**:
+- Al editar una propiedad, las imágenes ya cargadas mostraban URLs relativas (`/uploads/properties/...`)
+- Las URLs no incluían el dominio completo, causando imágenes rotas
+- Era necesario eliminar y volver a cargar todas las imágenes para actualizar
+
+**Solución implementada**:
+
+#### Frontend (`inmobiliaria-UI/src/components/AdminPropertyForm.tsx`)
+- ✅ Agregada función `getImageUrl()` para normalizar URLs de imágenes
+- ✅ Corrección automática de URLs relativas a URLs completas
+- ✅ Manejo de casos edge (URLs con doble slash, puertos incorrectos)
+
+```javascript
+// Nueva función para corregir URLs
+const getImageUrl = (imagePath: string) => {
+  // Normaliza cualquier formato de URL a la estructura correcta
+  // /uploads/properties/... → http://localhost:5001/uploads/properties/...
+};
+
+// Aplicación en el procesamiento de imágenes existentes
+const correctedImages = property.imagenes.map((img: any) => {
+  const imagePath = img.url || img;
+  return getImageUrl(imagePath); // URLs ahora son completas y válidas
+});
+```
+
+**Beneficios obtenidos**:
+- 🖼️ **Imágenes visibles**: Las imágenes existentes se muestran correctamente al editar
+- ⚡ **Eficiencia**: No es necesario recargar imágenes si no se desean cambiar
+- 🔧 **Mantenimiento**: Las URLs se normalizan automáticamente
+- 🎯 **UX mejorada**: Flujo de edición más intuitivo y eficiente
+
+**Tests implementados**:
+- `tests/image-url-edit.test.js` - Diagnóstico del problema
+- `tests/image-url-fix-verification.test.js` - Verificación de la solución
+
 ## 🧪 Testing
 
 Los tests se encuentran organizados en:
+
 - `./tests/` - Tests principales del proyecto
 - `./inmobiliaria-BFF/tests/` - Tests específicos del backend
 
@@ -242,14 +288,48 @@ cd inmobiliaria-BFF/tests
 npm test
 ```
 
+## 📋 Reglas de Organización del Proyecto
+
+### 🧪 Testing
+
+- **Ubicación**: Todos los tests deben estar en `./tests/`
+- **Nomenclatura**: `[nombre-funcionalidad].test.js`
+- **Ejecución**: `cd tests && node [nombre-test].js`
+
+### 📝 Documentación
+
+- **Archivo principal**: `README.md` (este archivo)
+- **Prohibido**: Crear archivos MD individuales
+- **Actualización**: Toda nueva información se agrega a este README
+- **Secciones**: Usar el historial de cambios para nuevas funcionalidades
+
+### 🗂️ Estructura de Archivos
+
+```
+inmobiliaria/
+├── tests/                    # ✅ Todos los tests aquí
+│   └── *.test.js
+├── README.md                 # ✅ Documentación única y consolidada
+├── CONTRIBUTING.md           # ✅ Guía de contribución
+└── [otros archivos del proyecto]
+```
+
+### 🚫 Archivos Prohibidos en Raíz
+
+- ❌ Archivos MD individuales (SOLUCION*\*.md, ESTADO*\*.md, etc.)
+- ❌ Scripts de test sueltos (test-\*.js)
+- ❌ Archivos de debug temporales
+
 ## 🚀 Scripts de Desarrollo
 
 ### Script de Inicio Automático
+
 ```bash
 .\start-both.bat
 ```
 
 **Funcionalidades del script**:
+
 - ✅ Detiene procesos Node.js existentes
 - ✅ Libera puertos 5001 y 5173
 - ✅ Inicia backend con correcciones

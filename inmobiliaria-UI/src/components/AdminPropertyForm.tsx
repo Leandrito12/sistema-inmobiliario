@@ -58,6 +58,30 @@ const AdminPropertyForm: React.FC = () => {
     }
   }, [id, isEditing]);
 
+  // Función para obtener la URL de imagen correcta
+  const getImageUrl = (imagePath: string) => {
+    if (!imagePath) return '';
+    
+    let url = imagePath;
+    
+    // Si la URL ya es completa (comienza con http), extraer solo la parte de uploads
+    if (url.startsWith('http')) {
+      const uploadIndex = url.indexOf('/uploads');
+      if (uploadIndex !== -1) {
+        url = url.substring(uploadIndex);
+      }
+    }
+    
+    // Corregir doble slash si existe
+    if (url.includes('//uploads')) {
+      url = url.replace('//uploads', '/uploads');
+    }
+    
+    // Asegurar que la URL apunte al puerto correcto del backend (5001)
+    const fullUrl = `http://localhost:5001${url}`;
+    return fullUrl;
+  };
+
   const fetchProperty = async () => {
     try {
       const token = localStorage.getItem('adminToken');
@@ -88,9 +112,13 @@ const AdminPropertyForm: React.FC = () => {
           address: property.ubicacion?.direccion || ''
         });
         
-        // Mapear imágenes existentes
+        // Mapear imágenes existentes con URLs corregidas
         if (property.imagenes && Array.isArray(property.imagenes)) {
-          setExistingImages(property.imagenes.map((img: any) => img.url || img));
+          const correctedImages = property.imagenes.map((img: any) => {
+            const imagePath = img.url || img;
+            return getImageUrl(imagePath);
+          });
+          setExistingImages(correctedImages);
         }
       } else {
         setError('Error al cargar la propiedad');
