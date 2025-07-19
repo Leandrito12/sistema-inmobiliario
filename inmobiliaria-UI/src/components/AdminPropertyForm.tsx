@@ -176,16 +176,22 @@ const AdminPropertyForm: React.FC = () => {
       formDataToSend.append('estado', 'disponible'); // Valor por defecto
       formDataToSend.append('destacado', 'false'); // Valor por defecto
       
-      // Ubicación como campos separados (el backend los procesará)
-      formDataToSend.append('ubicacion.direccion', formData.address);
-      formDataToSend.append('ubicacion.ciudad', formData.city);
-      formDataToSend.append('ubicacion.estado', formData.state);
-      formDataToSend.append('ubicacion.codigoPostal', formData.postalCode);
+      // Ubicación como objeto JSON (estructura exacta que espera el backend)
+      const ubicacion = {
+        direccion: formData.address,
+        ciudad: formData.city,
+        estado: formData.state,
+        codigoPostal: formData.postalCode
+      };
+      formDataToSend.append('ubicacion', JSON.stringify(ubicacion));
       
-      // Características como campos separados
-      formDataToSend.append('caracteristicas.habitaciones', formData.bedrooms.toString());
-      formDataToSend.append('caracteristicas.baños', formData.bathrooms.toString());
-      formDataToSend.append('caracteristicas.area', formData.area.toString());
+      // Características como objeto JSON (estructura exacta que espera el backend)
+      const caracteristicas = {
+        habitaciones: formData.bedrooms,
+        baños: formData.bathrooms,
+        area: formData.area
+      };
+      formDataToSend.append('caracteristicas', JSON.stringify(caracteristicas));
       
       // Amenidades (features)
       formDataToSend.append('amenidades', JSON.stringify(formData.features));

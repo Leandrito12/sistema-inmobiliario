@@ -16,6 +16,7 @@ Un sistema completo de gestión inmobiliaria desarrollado con **Node.js/Express*
 ## 🛠️ Tecnologías
 
 ### Backend (inmobiliaria-BFF)
+
 - **Node.js** + **Express.js**
 - **TypeScript**
 - **MongoDB** + **Mongoose**
@@ -23,6 +24,7 @@ Un sistema completo de gestión inmobiliaria desarrollado con **Node.js/Express*
 - **Multer** para upload de imágenes
 
 ### Frontend (inmobiliaria-UI)
+
 - **React 18** + **TypeScript**
 - **Vite** como bundler
 - **Bootstrap** para estilos
@@ -160,6 +162,102 @@ cd inmobiliaria-UI
 rm -rf node_modules package-lock.json
 npm install
 ```
+
+## 📚 Historial de Cambios y Mejoras
+
+### ✅ Alineación Frontend-Backend (v1.2.0)
+
+**Problema resuelto**: Eliminación de transformaciones complejas en el backend
+
+**Cambios implementados**:
+
+#### Frontend (`inmobiliaria-UI/src/components/AdminPropertyForm.tsx`)
+- ✅ Los datos ahora se envían en la estructura exacta que espera el backend
+- ✅ Ubicación y características se envían como objetos JSON
+- ✅ Eliminada dependencia de transformaciones en el backend
+
+```javascript
+// ANTES (complejo)
+formData.append('caracteristicas.baños', formData.bathrooms.toString());
+
+// AHORA (simple y directo)
+const caracteristicas = {
+  habitaciones: formData.bedrooms,
+  baños: formData.bathrooms,
+  area: formData.area
+};
+formData.append('caracteristicas', JSON.stringify(caracteristicas));
+```
+
+#### Backend (`inmobiliaria-BFF/src/middleware/propertyTransform.ts`)
+- ✅ Middleware simplificado
+- ✅ Solo parsea objetos JSON que llegan como strings
+- ✅ Eliminada lógica compleja de transformación de campos planos
+
+```typescript
+// Proceso simplificado: solo parsing de JSON
+if (req.body.caracteristicas && typeof req.body.caracteristicas === "string") {
+  req.body.caracteristicas = JSON.parse(req.body.caracteristicas);
+}
+```
+
+**Beneficios obtenidos**:
+- 🎯 **Simplicidad**: Código más limpio y mantenible
+- 🚀 **Menos errores**: Eliminadas transformaciones complejas
+- 📊 **Coherencia**: Frontend y backend hablan el mismo "idioma"
+- ⚡ **Rendimiento**: Menos procesamiento en el servidor
+
+### ✅ Corrección Campo Baños (v1.1.0)
+
+**Problemas resueltos**:
+- ✅ Campo `baños` ahora aparece correctamente en el dashboard
+- ✅ URLs de imágenes corregidas (puerto 5001)
+- ✅ Estilos CSS para contadores agregados
+- ✅ Middleware de debug implementado
+
+### ✅ Sistema Base (v1.0.0)
+
+**Funcionalidades implementadas**:
+- ✅ CRUD completo de propiedades
+- ✅ Sistema de autenticación JWT
+- ✅ Upload y gestión de imágenes
+- ✅ Panel de administración React
+- ✅ Base de datos MongoDB
+
+## 🧪 Testing
+
+Los tests se encuentran organizados en:
+- `./tests/` - Tests principales del proyecto
+- `./inmobiliaria-BFF/tests/` - Tests específicos del backend
+
+### Ejecutar Tests
+
+```bash
+# Tests del proyecto (desde raíz)
+cd tests
+node <nombre-test>.js
+
+# Tests del backend
+cd inmobiliaria-BFF/tests
+npm test
+```
+
+## 🚀 Scripts de Desarrollo
+
+### Script de Inicio Automático
+```bash
+.\start-both.bat
+```
+
+**Funcionalidades del script**:
+- ✅ Detiene procesos Node.js existentes
+- ✅ Libera puertos 5001 y 5173
+- ✅ Inicia backend con correcciones
+- ✅ Inicia frontend
+- ✅ Abre automáticamente el admin panel
+- ✅ Muestra estado de servicios
+
+---
 
 ## 📝 Notas de Desarrollo
 

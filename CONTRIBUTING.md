@@ -3,11 +3,13 @@
 ## 🛠️ Configuración del Entorno de Desarrollo
 
 ### Prerrequisitos
+
 - Node.js (v18 o superior)
 - MongoDB (local o remoto)
 - Git
 
 ### Setup Inicial
+
 ```bash
 # Clonar el repositorio
 git clone [URL_DEL_REPO]
@@ -21,12 +23,14 @@ chmod +x setup.sh
 ## 📝 Estándares de Código
 
 ### Backend (TypeScript)
+
 - Usar TypeScript strict mode
 - Validación de tipos completa
 - Middlewares modulares
 - Manejo de errores consistente
 
 ### Frontend (React + TypeScript)
+
 - Componentes funcionales con hooks
 - Props tipadas con interfaces
 - Estados locales mínimos
@@ -35,16 +39,19 @@ chmod +x setup.sh
 ## 🔄 Flujo de Trabajo
 
 ### 1. Crear rama para feature
+
 ```bash
 git checkout -b feature/nueva-funcionalidad
 ```
 
 ### 2. Desarrollo
+
 - Escribir código siguiendo los estándares
 - Probar localmente
 - Commit frecuente con mensajes descriptivos
 
 ### 3. Pull Request
+
 - Descripción clara de los cambios
 - Screenshots si aplica
 - Tests pasando
@@ -52,12 +59,14 @@ git checkout -b feature/nueva-funcionalidad
 ## 🧪 Testing
 
 ### Backend
+
 ```bash
 cd inmobiliaria-BFF
 npm test
 ```
 
 ### Frontend
+
 ```bash
 cd inmobiliaria-UI
 npm test
@@ -77,6 +86,7 @@ tipo(alcance): descripción corta
 ```
 
 ### Ejemplos:
+
 ```
 feat(auth): agregar autenticación con JWT
 fix(properties): corregir campo baños en actualización
@@ -86,6 +96,7 @@ docs(readme): actualizar instrucciones de instalación
 ## 🐛 Reportar Bugs
 
 ### Información a incluir:
+
 1. **Descripción**: Qué pasó vs qué esperabas
 2. **Pasos para reproducir**: Lista detallada
 3. **Entorno**: OS, versión de Node, etc.
@@ -95,12 +106,15 @@ docs(readme): actualizar instrucciones de instalación
 ## 🔍 Debug
 
 ### Backend
+
 Los logs están configurados en el middleware. Para debug adicional:
+
 ```bash
 DEBUG=inmobiliaria:* npm run dev
 ```
 
 ### Frontend
+
 Usar React Developer Tools y console.log
 
 ## 📋 Checklist para PRs
@@ -115,6 +129,7 @@ Usar React Developer Tools y console.log
 ## 🚀 Deploy
 
 ### Variables de Entorno Producción
+
 ```env
 NODE_ENV=production
 PORT=5001
@@ -132,5 +147,6 @@ JWT_SECRET=secret_super_seguro
 ## 📞 Contacto
 
 Para preguntas sobre desarrollo:
+
 - Crear issue en GitHub
 - Contactar al maintainer principal
