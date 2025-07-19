@@ -234,6 +234,7 @@ if (req.body.caracteristicas && typeof req.body.caracteristicas === "string") {
 **Problema resuelto**: Las imágenes existentes aparecían rotas al editar propiedades
 
 **Descripción del problema**:
+
 - Al editar una propiedad, las imágenes ya cargadas mostraban URLs relativas (`/uploads/properties/...`)
 - Las URLs no incluían el dominio completo, causando imágenes rotas
 - Era necesario eliminar y volver a cargar todas las imágenes para actualizar
@@ -241,6 +242,7 @@ if (req.body.caracteristicas && typeof req.body.caracteristicas === "string") {
 **Solución implementada**:
 
 #### Frontend (`inmobiliaria-UI/src/components/AdminPropertyForm.tsx`)
+
 - ✅ Agregada función `getImageUrl()` para normalizar URLs de imágenes
 - ✅ Corrección automática de URLs relativas a URLs completas
 - ✅ Manejo de casos edge (URLs con doble slash, puertos incorrectos)
@@ -260,82 +262,76 @@ const correctedImages = property.imagenes.map((img: any) => {
 ```
 
 **Beneficios obtenidos**:
+
 - 🖼️ **Imágenes visibles**: Las imágenes existentes se muestran correctamente al editar
 - ⚡ **Eficiencia**: No es necesario recargar imágenes si no se desean cambiar
 - 🔧 **Mantenimiento**: Las URLs se normalizan automáticamente
 - 🎯 **UX mejorada**: Flujo de edición más intuitivo y eficiente
 
 **Tests implementados**:
+
 - `tests/image-url-edit.test.js` - Diagnóstico del problema
 - `tests/image-url-fix-verification.test.js` - Verificación de la solución
 
-## 🧪 Testing
+### ✅ Corrección Persistencia de Imágenes en Actualización (v1.4.0)
 
-Los tests se encuentran organizados en:
+**Problema resuelto**: Las imágenes desaparecían del dashboard tras actualizar propiedades
 
-- `./tests/` - Tests principales del proyecto
-- `./inmobiliaria-BFF/tests/` - Tests específicos del backend
+**Descripción del problema**:
+- Al actualizar una propiedad manteniendo las imágenes existentes, estas desaparecían del dashboard
+- El backend ignoraba el campo `existingImages` enviado por el frontend  
+- Solo procesaba nuevas imágenes subidas, perdiendo las existentes
+- Aparecía "Sin imagen disponible" en propiedades que sí tenían imágenes
 
-### Ejecutar Tests
+**Solución implementada**:
 
-```bash
-# Tests del proyecto (desde raíz)
-cd tests
-node <nombre-test>.js
+#### Backend (`inmobiliaria-BFF/src/middleware/upload.ts`)
+- ✅ Modificado middleware `processUploadedImages` para procesar `existingImages`
+- ✅ Combina imágenes existentes + nuevas en un solo array
+- ✅ Mantiene orden y configuración de portada
+- ✅ Convierte URLs completas a formato interno consistente
 
-# Tests del backend
-cd inmobiliaria-BFF/tests
-npm test
+```typescript
+// Nuevo procesamiento: combina existentes + nuevas
+if (req.body.existingImages) {
+  const existingImages = JSON.parse(req.body.existingImages);
+  // Procesa imágenes existentes con estructura completa
+  const processedExisting = existingImages.map((imageUrl, index) => {
+    let url = imageUrl.replace('http://localhost:5001', ''); // Normalizar URL
+    return {
+      _id: new mongoose.Types.ObjectId(),
+      url: url, // URL relativa para consistencia
+      alt: `${req.body.titulo} - Imagen ${index + 1}`,
+      orden: index + 1,
+      // ...resto de propiedades
+    };
+  });
+  allImages = [...processedExisting];
+}
+
+// Luego agrega nuevas imágenes si las hay
+if (req.files && Array.isArray(req.files)) {
+  // Procesa nuevas imágenes y las combina
+  allImages = [...allImages, ...processedImages];
+}
 ```
 
-## 📋 Reglas de Organización del Proyecto
+**Casos manejados**:
+- 🖼️ **Solo imágenes existentes**: Se mantienen al actualizar otros campos
+- 📸 **Existentes + nuevas**: Se combinan correctamente
+- 🆕 **Solo nuevas**: Funciona como antes (creación)
+- 🔗 **URLs mixtas**: Normaliza diferentes formatos de URL
 
-### 🧪 Testing
+**Beneficios obtenidos**:
+- 🔄 **Persistencia**: Las imágenes se mantienen tras actualización
+- 🖼️ **Visibilidad**: Aparecen correctamente en el dashboard
+- ⚡ **Eficiencia**: No necesita recargar imágenes innecesariamente
+- 🎯 **UX consistente**: Comportamiento predecible en edición
 
-- **Ubicación**: Todos los tests deben estar en `./tests/`
-- **Nomenclatura**: `[nombre-funcionalidad].test.js`
-- **Ejecución**: `cd tests && node [nombre-test].js`
-
-### 📝 Documentación
-
-- **Archivo principal**: `README.md` (este archivo)
-- **Prohibido**: Crear archivos MD individuales
-- **Actualización**: Toda nueva información se agrega a este README
-- **Secciones**: Usar el historial de cambios para nuevas funcionalidades
-
-### 🗂️ Estructura de Archivos
-
-```
-inmobiliaria/
-├── tests/                    # ✅ Todos los tests aquí
-│   └── *.test.js
-├── README.md                 # ✅ Documentación única y consolidada
-├── CONTRIBUTING.md           # ✅ Guía de contribución
-└── [otros archivos del proyecto]
-```
-
-### 🚫 Archivos Prohibidos en Raíz
-
-- ❌ Archivos MD individuales (SOLUCION*\*.md, ESTADO*\*.md, etc.)
-- ❌ Scripts de test sueltos (test-\*.js)
-- ❌ Archivos de debug temporales
-
-## 🚀 Scripts de Desarrollo
-
-### Script de Inicio Automático
-
-```bash
-.\start-both.bat
-```
-
-**Funcionalidades del script**:
-
-- ✅ Detiene procesos Node.js existentes
-- ✅ Libera puertos 5001 y 5173
-- ✅ Inicia backend con correcciones
-- ✅ Inicia frontend
-- ✅ Abre automáticamente el admin panel
-- ✅ Muestra estado de servicios
+**Tests implementados**:
+- `tests/dashboard-images-after-update.test.js` - Diagnóstico del problema en dashboard
+- `tests/existing-images-update.test.js` - Identificación del problema en backend
+- `tests/existing-images-fix-verification.test.js` - Verificación de la solución (100% exitoso)
 
 ---
 

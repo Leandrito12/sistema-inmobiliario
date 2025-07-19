@@ -88,29 +88,79 @@ export const uploadMultipleImages = uploadImages.array("images", 10);
 // Middleware para una sola imagen
 export const uploadSingleImage = uploadImages.single("image");
 
-// Middleware para procesar las imágenes después de la subida (versión simplificada)
+// Middleware para procesar las imágenes después de la subida (versión mejorada)
 export const processUploadedImages = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  let allImages: any[] = [];
+
+  // Procesar imágenes existentes (en caso de actualización)
+  if (req.body.existingImages) {
+    try {
+      const existingImages = JSON.parse(req.body.existingImages);
+      console.log(`📸 Procesando ${existingImages.length} imágenes existentes...`);
+
+      const processedExisting = existingImages.map(
+        (imageUrl: string, index: number) => {
+          // Convertir URL completa a formato interno si es necesario
+          let url = imageUrl;
+          if (url.startsWith("http://localhost:5001")) {
+            url = url.replace("http://localhost:5001", "");
+          }
+
+          return {
+            _id: new mongoose.Types.ObjectId(),
+            url: url,
+            alt:
+              req.body.titulo && req.body.titulo !== "undefined"
+                ? `${req.body.titulo} - Imagen ${index + 1}`
+                : `Imagen ${index + 1}`,
+            orden: index + 1,
+            nombreArchivo: url.split("/").pop() || `imagen-${index + 1}`,
+            tamano: 0, // Tamaño no disponible para imágenes existentes
+            tamanoOriginal: 0,
+            compresion: 0,
+            tipo: "image/jpeg", // Tipo por defecto para imágenes existentes
+            esPortada: index === 0, // La primera existente es portada si no hay nuevas
+            thumbnail: "",
+            dimensiones: {
+              width: 0,
+              height: 0,
+            },
+          };
+        }
+      );
+
+      allImages = [...processedExisting];
+      console.log(
+        `✅ Procesadas ${processedExisting.length} imágenes existentes`
+      );
+    } catch (error) {
+      console.error("❌ Error procesando existingImages:", error);
+    }
+  }
+
   if (req.files && Array.isArray(req.files)) {
-    // Procesar múltiples imágenes
+    // Procesar múltiples imágenes nuevas
     const processedImages = req.files.map(
       (file: Express.Multer.File, index: number) => {
         return {
           _id: new mongoose.Types.ObjectId(),
           url: `/uploads/properties/${file.filename}`,
-          alt: req.body.titulo
-            ? `${req.body.titulo} - Imagen ${index + 1}`
-            : `Imagen ${index + 1}`,
-          orden: index + 1,
+          alt:
+            req.body.titulo && req.body.titulo !== "undefined"
+              ? `${req.body.titulo} - Imagen ${allImages.length + index + 1}`
+              : `Imagen ${allImages.length + index + 1}`,
+          orden: allImages.length + index + 1,
           nombreArchivo: file.filename,
           tamano: file.size,
           tamanoOriginal: file.size,
           compresion: 0, // Sin compresión por ahora
           tipo: file.mimetype,
-          esPortada: index === 0,
+          esPortada:
+            allImages.length === 0 && index === 0, // Portada si no hay existentes
           thumbnail: "",
           dimensiones: {
             width: 0,
@@ -120,35 +170,24 @@ export const processUploadedImages = async (
       }
     );
 
-    // Agregar al body de la request
-    req.body.imagenes = processedImages;
-
-    // Log para debug
-    console.log(`📸 Procesadas ${processedImages.length} imágenes:`);
-    processedImages.forEach((img, index) => {
-      console.log(
-        `   ${index + 1}. ${img.nombreArchivo} - ${(
-          img.tamano /
-          1024 /
-          1024
-        ).toFixed(2)} MB`
-      );
-    });
+    allImages = [...allImages, ...processedImages];
+    console.log(`📸 Procesadas ${processedImages.length} imágenes nuevas`);
   } else if (req.file) {
-    // Procesar una sola imagen
+    // Procesar una sola imagen nueva
     const processedImage = {
       _id: new mongoose.Types.ObjectId(),
       url: `/uploads/properties/${req.file.filename}`,
-      alt: req.body.titulo
-        ? `${req.body.titulo} - Imagen principal`
-        : "Imagen principal",
-      orden: 1,
+      alt:
+        req.body.titulo && req.body.titulo !== "undefined"
+          ? `${req.body.titulo} - Imagen ${allImages.length + 1}`
+          : `Imagen ${allImages.length + 1}`,
+      orden: allImages.length + 1,
       nombreArchivo: req.file.filename,
       tamano: req.file.size,
       tamanoOriginal: req.file.size,
       compresion: 0,
       tipo: req.file.mimetype,
-      esPortada: true,
+      esPortada: allImages.length === 0, // Portada si no hay existentes
       thumbnail: "",
       dimensiones: {
         width: 0,
@@ -156,14 +195,20 @@ export const processUploadedImages = async (
       },
     };
 
-    req.body.imagenes = [processedImage];
+    allImages = [...allImages, processedImage];
+    console.log(`📸 Procesada imagen nueva: ${processedImage.nombreArchivo}`);
+  }
 
+  // Asegurar que hay al menos una portada
+  if (allImages.length > 0 && !allImages.some((img) => img.esPortada)) {
+    allImages[0].esPortada = true;
+  }
+
+  // Asignar todas las imágenes al body
+  if (allImages.length > 0) {
+    req.body.imagenes = allImages;
     console.log(
-      `📸 Procesada imagen: ${processedImage.nombreArchivo} - ${(
-        processedImage.tamano /
-        1024 /
-        1024
-      ).toFixed(2)} MB`
+      `🎯 Total de imágenes procesadas: ${allImages.length} (existentes + nuevas)`
     );
   }
 
