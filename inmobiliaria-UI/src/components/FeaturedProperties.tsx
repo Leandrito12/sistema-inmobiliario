@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { FaBed, FaBath, FaRulerCombined, FaMapMarkerAlt, FaHeart, FaCamera } from 'react-icons/fa';
+import { FaBed, FaBath, FaRulerCombined, FaMapMarkerAlt, FaCamera } from 'react-icons/fa';
 
 interface Property {
   id: number;
@@ -55,6 +55,41 @@ const FeaturedProperties: React.FC = () => {
       type: "Villa"
     }
   ];
+
+  // Función para abrir WhatsApp con mensaje prearmado
+  const handleWhatsAppClick = (property: Property) => {
+    console.log('handleWhatsAppClick called with property:', property);
+    
+    const phoneNumber = "5491112345678"; // Número de WhatsApp de la inmobiliaria
+    const message = `¡Hola! Me interesa consultar por la propiedad "${property.title}" (Ref: ${property.id}).
+
+Ubicación: ${property.location}
+Precio: ${property.price}
+Tipo: ${property.type}
+
+¿Podrían brindarme más información? ¡Gracias!`;
+    
+    console.log('Message to send:', message);
+    
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    
+    console.log('WhatsApp URL:', whatsappUrl);
+    
+    // Intentar abrir WhatsApp
+    try {
+      window.open(whatsappUrl, '_blank');
+      console.log('WhatsApp link opened successfully');
+    } catch (error) {
+      console.error('Error opening WhatsApp:', error);
+      // Fallback: copiar URL al clipboard
+      navigator.clipboard.writeText(whatsappUrl).then(() => {
+        alert('Link de WhatsApp copiado al portapapeles. Pégalo en tu navegador para continuar.');
+      }).catch(() => {
+        alert('No se pudo abrir WhatsApp automáticamente. URL: ' + whatsappUrl);
+      });
+    }
+  };
 
   return (
     <section 
@@ -119,9 +154,45 @@ const FeaturedProperties: React.FC = () => {
                       variant="light" 
                       size="sm" 
                       className="rounded-circle me-2"
-                      style={{ width: '40px', height: '40px' }}
+                      style={{ 
+                        width: '40px', 
+                        height: '40px',
+                        transition: 'all 0.3s ease',
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        border: 'none',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#25D366';
+                        e.currentTarget.style.color = '#fff';
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(37, 211, 102, 0.3)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                        e.currentTarget.style.color = '#25D366';
+                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('WhatsApp button clicked for property:', property.title);
+                        handleWhatsAppClick(property);
+                      }}
+                      title="Consultar por WhatsApp"
                     >
-                      <FaHeart />
+                      <span style={{ 
+                        fontSize: '18px', 
+                        color: '#25D366',
+                        fontWeight: 'bold',
+                        fontFamily: 'Arial, sans-serif'
+                      }}>
+                        📱
+                      </span>
                     </Button>
                     <Button 
                       variant="light" 

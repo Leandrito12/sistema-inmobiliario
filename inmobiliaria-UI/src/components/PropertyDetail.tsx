@@ -88,24 +88,26 @@ const PropertyDetail: React.FC = () => {
 
   if (!property) {
     return (
-      <Container className="py-5">
-        <div className="text-center">
-          <h3 className="text-muted mb-4">Propiedad no encontrada</h3>
-          <Button 
-            variant="primary" 
-            onClick={() => navigate('/propiedades')}
-            className="rounded-pill gradient-primary border-0"
-          >
-            <FaArrowLeft className="me-2" />
-            Volver a Propiedades
-          </Button>
-        </div>
-      </Container>
+      <div style={{ paddingTop: '100px' }}>
+        <Container className="py-5">
+          <div className="text-center">
+            <h3 className="text-muted mb-4">Propiedad no encontrada</h3>
+            <Button 
+              variant="primary" 
+              onClick={() => navigate('/propiedades')}
+              className="rounded-pill gradient-primary border-0"
+            >
+              <FaArrowLeft className="me-2" />
+              Volver a Propiedades
+            </Button>
+          </div>
+        </Container>
+      </div>
     );
   }
 
   return (
-    <div className="min-vh-100 bg-light">
+    <div className="min-vh-100 bg-light" style={{ paddingTop: '100px' }}>
       <Container className="py-4">
         {/* Botón volver */}
         <div className="mb-4">

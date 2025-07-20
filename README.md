@@ -278,14 +278,16 @@ const correctedImages = property.imagenes.map((img: any) => {
 **Problema resuelto**: Las imágenes desaparecían del dashboard tras actualizar propiedades
 
 **Descripción del problema**:
+
 - Al actualizar una propiedad manteniendo las imágenes existentes, estas desaparecían del dashboard
-- El backend ignoraba el campo `existingImages` enviado por el frontend  
+- El backend ignoraba el campo `existingImages` enviado por el frontend
 - Solo procesaba nuevas imágenes subidas, perdiendo las existentes
 - Aparecía "Sin imagen disponible" en propiedades que sí tenían imágenes
 
 **Solución implementada**:
 
 #### Backend (`inmobiliaria-BFF/src/middleware/upload.ts`)
+
 - ✅ Modificado middleware `processUploadedImages` para procesar `existingImages`
 - ✅ Combina imágenes existentes + nuevas en un solo array
 - ✅ Mantiene orden y configuración de portada
@@ -297,7 +299,7 @@ if (req.body.existingImages) {
   const existingImages = JSON.parse(req.body.existingImages);
   // Procesa imágenes existentes con estructura completa
   const processedExisting = existingImages.map((imageUrl, index) => {
-    let url = imageUrl.replace('http://localhost:5001', ''); // Normalizar URL
+    let url = imageUrl.replace("http://localhost:5001", ""); // Normalizar URL
     return {
       _id: new mongoose.Types.ObjectId(),
       url: url, // URL relativa para consistencia
@@ -317,18 +319,21 @@ if (req.files && Array.isArray(req.files)) {
 ```
 
 **Casos manejados**:
+
 - 🖼️ **Solo imágenes existentes**: Se mantienen al actualizar otros campos
 - 📸 **Existentes + nuevas**: Se combinan correctamente
 - 🆕 **Solo nuevas**: Funciona como antes (creación)
 - 🔗 **URLs mixtas**: Normaliza diferentes formatos de URL
 
 **Beneficios obtenidos**:
+
 - 🔄 **Persistencia**: Las imágenes se mantienen tras actualización
 - 🖼️ **Visibilidad**: Aparecen correctamente en el dashboard
 - ⚡ **Eficiencia**: No necesita recargar imágenes innecesariamente
 - 🎯 **UX consistente**: Comportamiento predecible en edición
 
 **Tests implementados**:
+
 - `tests/dashboard-images-after-update.test.js` - Diagnóstico del problema en dashboard
 - `tests/existing-images-update.test.js` - Identificación del problema en backend
 - `tests/existing-images-fix-verification.test.js` - Verificación de la solución (100% exitoso)

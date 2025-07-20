@@ -100,7 +100,9 @@ export const processUploadedImages = async (
   if (req.body.existingImages) {
     try {
       const existingImages = JSON.parse(req.body.existingImages);
-      console.log(`📸 Procesando ${existingImages.length} imágenes existentes...`);
+      console.log(
+        `📸 Procesando ${existingImages.length} imágenes existentes...`
+      );
 
       const processedExisting = existingImages.map(
         (imageUrl: string, index: number) => {
@@ -159,8 +161,7 @@ export const processUploadedImages = async (
           tamanoOriginal: file.size,
           compresion: 0, // Sin compresión por ahora
           tipo: file.mimetype,
-          esPortada:
-            allImages.length === 0 && index === 0, // Portada si no hay existentes
+          esPortada: allImages.length === 0 && index === 0, // Portada si no hay existentes
           thumbnail: "",
           dimensiones: {
             width: 0,

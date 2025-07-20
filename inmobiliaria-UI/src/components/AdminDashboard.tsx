@@ -300,14 +300,24 @@ const AdminDashboard: React.FC = () => {
               <Card.Body className="py-3">
                 <div className="d-flex justify-content-between align-items-center">
                   <h4 className="mb-0 fw-bold">Gestión de Propiedades</h4>
-                  <Button
-                    variant="primary"
-                    className="rounded-pill gradient-primary border-0"
-                    onClick={() => navigate('/admin/propiedades/nueva')}
-                  >
-                    <i className="fas fa-plus me-2"></i>
-                    Nueva Propiedad
-                  </Button>
+                  <div className="d-flex gap-2">
+                    <Button
+                      variant="outline-info"
+                      className="rounded-pill border-0 gradient-info text-white"
+                      onClick={() => navigate('/')}
+                    >
+                      <i className="fas fa-globe me-2"></i>
+                      Ir a la web
+                    </Button>
+                    <Button
+                      variant="primary"
+                      className="rounded-pill gradient-primary border-0"
+                      onClick={() => navigate('/admin/propiedades/nueva')}
+                    >
+                      <i className="fas fa-plus me-2"></i>
+                      Nueva Propiedad
+                    </Button>
+                  </div>
                 </div>
               </Card.Body>
             </Card>
