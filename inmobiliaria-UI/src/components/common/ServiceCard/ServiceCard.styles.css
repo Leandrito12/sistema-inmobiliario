@@ -1,0 +1,109 @@
+/* ServiceCard Styles */
+
+.service-card {
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.service-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+.service-card[role="button"]:hover {
+  transform: translateY(-15px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15) !important;
+}
+
+.service-card__body {
+  position: relative;
+  z-index: 2;
+}
+
+.service-card__decoration {
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  border-radius: 50%;
+  z-index: 1;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.service-card:hover .service-card__decoration {
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+
+.service-card__icon {
+  font-size: 3rem;
+  position: relative;
+  z-index: 3;
+  transition: all 0.3s ease;
+}
+
+.service-card:hover .service-card__icon {
+  transform: scale(1.1);
+}
+
+.service-card__title {
+  position: relative;
+  z-index: 3;
+  font-size: 1.25rem;
+}
+
+.service-card__description {
+  position: relative;
+  z-index: 3;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.service-card__hover-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 60px;
+  height: 4px;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  z-index: 3;
+}
+
+.service-card[role="button"]:hover .service-card__hover-indicator {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* Focus styles para accesibilidad */
+.service-card[role="button"]:focus {
+  outline: 2px solid #6f42c1;
+  outline-offset: 2px;
+}
+
+/* Animaciones para diferentes tamaños de pantalla */
+@media (max-width: 768px) {
+  .service-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .service-card[role="button"]:hover {
+    transform: translateY(-8px);
+  }
+  
+  .service-card__icon {
+    font-size: 2.5rem;
+  }
+  
+  .service-card__title {
+    font-size: 1.125rem;
+  }
+  
+  .service-card__description {
+    font-size: 0.9rem;
+  }
+}

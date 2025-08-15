@@ -1,0 +1,99 @@
+/* Custom Button Styles */
+
+.custom-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: none;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0.5px;
+}
+
+/* Variantes con gradientes */
+.custom-button--gradient-primary {
+  background: linear-gradient(135deg, #6f42c1 0%, #4834d4 100%) !important;
+  border: none !important;
+  color: white !important;
+}
+
+.custom-button--gradient-primary:hover {
+  background: linear-gradient(135deg, #5a359a 0%, #3d2db3 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(111, 66, 193, 0.3);
+}
+
+.custom-button--gradient-secondary {
+  background: linear-gradient(135deg, #ff6b35 0%, #f0932b 100%) !important;
+  border: none !important;
+  color: white !important;
+}
+
+.custom-button--gradient-secondary:hover {
+  background: linear-gradient(135deg, #e55a2b 0%, #d6821f 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+}
+
+/* Tamaños personalizados */
+.custom-button--xl {
+  padding: 1rem 2rem;
+  font-size: 1.25rem;
+  border-radius: 50px;
+}
+
+/* Ancho completo */
+.custom-button--full-width {
+  width: 100%;
+}
+
+/* Bordes redondeados */
+.custom-button--rounded {
+  border-radius: 50px !important;
+}
+
+/* Estado de carga */
+.custom-button--loading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.custom-button__spinner {
+  display: inline-flex;
+  align-items: center;
+}
+
+.custom-button__icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.custom-button__text {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Efectos hover generales */
+.custom-button:not(.custom-button--gradient-primary):not(.custom-button--gradient-secondary):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Efectos focus */
+.custom-button:focus {
+  box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.25);
+  outline: none;
+}
+
+/* Animación de ondas en click */
+.custom-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .custom-button--xl {
+    padding: 0.875rem 1.5rem;
+    font-size: 1.125rem;
+  }
+}

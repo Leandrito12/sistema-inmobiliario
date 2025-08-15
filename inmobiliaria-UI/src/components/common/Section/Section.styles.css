@@ -1,0 +1,118 @@
+/* Section Styles */
+
+.custom-section {
+  width: 100%;
+}
+
+/* Padding variants */
+.custom-section--padding-none {
+  padding: 0;
+}
+
+.custom-section--padding-sm {
+  padding: 2rem 0;
+}
+
+.custom-section--padding-md {
+  padding: 3rem 0;
+}
+
+.custom-section--padding-lg {
+  padding: 5rem 0;
+}
+
+.custom-section--padding-xl {
+  padding: 7rem 0;
+}
+
+/* Secciones con decoraciones */
+.custom-section--decorated {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Elementos decorativos */
+.custom-section__decoration {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.custom-section__decoration--primary {
+  top: 10%;
+  right: 10%;
+  width: 300px;
+  height: 300px;
+}
+
+.custom-section__decoration--secondary {
+  bottom: 20%;
+  left: 5%;
+  width: 200px;
+  height: 200px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .custom-section__decoration--primary {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .custom-section__decoration--secondary {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-section--padding-sm {
+    padding: 1.5rem 0;
+  }
+  
+  .custom-section--padding-md {
+    padding: 2rem 0;
+  }
+  
+  .custom-section--padding-lg {
+    padding: 3rem 0;
+  }
+  
+  .custom-section--padding-xl {
+    padding: 4rem 0;
+  }
+  
+  .custom-section__decoration--primary {
+    width: 200px;
+    height: 200px;
+    top: 5%;
+    right: 5%;
+  }
+  
+  .custom-section__decoration--secondary {
+    width: 150px;
+    height: 150px;
+    bottom: 10%;
+    left: 0%;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-section--padding-sm {
+    padding: 1rem 0;
+  }
+  
+  .custom-section--padding-md {
+    padding: 1.5rem 0;
+  }
+  
+  .custom-section--padding-lg {
+    padding: 2rem 0;
+  }
+  
+  .custom-section--padding-xl {
+    padding: 3rem 0;
+  }
+}
