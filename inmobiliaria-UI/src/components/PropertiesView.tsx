@@ -79,6 +79,23 @@ const PropertiesView: React.FC = () => {
     amenities: []
   });
 
+  // Función para obtener la URL de imagen correcta
+  const getImageUrl = (imagePath: string) => {
+    if (!imagePath) {
+      return '/placeholder.jpg';
+    }
+    
+    // Si la URL ya comienza con /uploads, solo agregarle el dominio del backend
+    if (imagePath.startsWith('/uploads')) {
+      const fullUrl = `http://localhost:5001${imagePath}`;
+      return fullUrl;
+    }
+    
+    // Si no comienza con /uploads, asumimos que es solo el nombre del archivo
+    const fullUrl = `http://localhost:5001/uploads/properties/${imagePath}`;
+    return fullUrl;
+  };
+
   const fetchProperties = async () => {
     try {
       setLoading(true);
@@ -418,7 +435,7 @@ const PropertiesView: React.FC = () => {
                   <div
                     style={{
                       height: '250px',
-                      backgroundImage: `url(${property.imagenes.find(img => img.esPortada)?.url || property.imagenes[0]?.url || '/placeholder.jpg'})`,
+                      backgroundImage: `url(${getImageUrl(property.imagenes.find(img => img.esPortada)?.url || property.imagenes[0]?.url || '')})`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center'
                     }}
