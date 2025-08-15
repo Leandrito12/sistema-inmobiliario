@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Header from './components/Header';
-import LandingPage from './components/LandingPage';
+import { LandingPage } from './pages';
 import PropertiesView from './components/PropertiesView';
 
 import AdminLogin from './components/AdminLogin';
