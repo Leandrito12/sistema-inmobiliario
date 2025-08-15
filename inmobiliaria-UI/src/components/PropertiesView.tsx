@@ -1,20 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Container, Row, Col, Card, Button, Badge, Form, InputGroup, Dropdown } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Container, Row, Col, Card, Button, Form, InputGroup, Dropdown } from 'react-bootstrap';
 import { 
-  FaBed, 
-  FaBath, 
-  FaRulerCombined, 
-  FaMapMarkerAlt, 
-  FaHeart, 
-  FaCamera, 
   FaSearch,
   FaFilter,
-  FaSortAmountDown,
-  FaEye
+  FaSortAmountDown
 } from 'react-icons/fa';
 import { API_ENDPOINTS } from '../config/api';
-import { formatPrice, capitalizeStatus, getStatusBadgeColor } from '../utils/propertyUtils';
+import { PropertyCardNew } from './common/PropertyCard';
 
 interface Property {
   _id: string;
@@ -396,218 +388,24 @@ const PropertiesView: React.FC = () => {
         <Row className="g-4">
           {Array.isArray(filteredProperties) && filteredProperties.map((property, index) => (
             <Col lg={4} md={6} key={property._id}>
-              <Card 
-                className="property-card h-100 border-0 shadow-sm"
-                style={{ 
-                  borderRadius: '15px',
-                  overflow: 'hidden',
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer'
-                }}
-                data-aos="fade-up"
-                data-aos-delay={index * 100}
-              >
-                <div className="position-relative">
-                  <div
-                    style={{
-                      height: '250px',
-                      backgroundImage: `url(${getImageUrl(property.imagenes.find(img => img.esPortada)?.url || property.imagenes[0]?.url || '')})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center'
-                    }}
-                  />
-                  
-                  {/* Overlay para propiedades no disponibles */}
-                  {(property.estado === 'vendido' || property.estado === 'alquilado' || property.estado === 'reservado') && (
-                    <div 
-                      className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-                      style={{
-                        backgroundColor: 'rgba(128, 128, 128, 0.7)',
-                        zIndex: 2
-                      }}
-                    >
-                      <div
-                        className="text-white fw-bold text-center px-4 py-2"
-                        style={{
-                          backgroundColor: property.estado === 'vendido' ? 'rgba(220, 53, 69, 0.9)' : 
-                                         property.estado === 'alquilado' ? 'rgba(40, 167, 69, 0.9)' : 
-                                         'rgba(255, 193, 7, 0.9)',
-                          borderRadius: '25px',
-                          fontSize: '1.2rem',
-                          textTransform: 'uppercase',
-                          letterSpacing: '1px',
-                          border: '2px solid white',
-                          boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)'
-                        }}
-                      >
-                        {capitalizeStatus(property.estado)}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Badges superiores */}
-                  <div className="position-absolute top-0 start-0 p-3" style={{ zIndex: 3 }}>
-                    <Badge 
-                      bg={getStatusBadgeColor(property.estado)}
-                      className="fw-bold me-2"
-                      style={{
-                        fontSize: '0.8rem',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '20px'
-                      }}
-                    >
-                      {capitalizeStatus(property.estado)}
-                    </Badge>
-                    {property.destacado && (
-                      <Badge 
-                        className="fw-bold"
-                        style={{
-                          background: 'linear-gradient(135deg, #ff6b35 0%, #f0932b 100%)',
-                          fontSize: '0.8rem',
-                          padding: '0.5rem 1rem',
-                          borderRadius: '20px'
-                        }}
-                      >
-                        Destacado
-                      </Badge>
-                    )}
-                  </div>
-
-                  {/* Botones superiores derecha */}
-                  <div className="position-absolute top-0 end-0 p-3" style={{ zIndex: 3 }}>
-                    <Button 
-                      variant="light" 
-                      size="sm" 
-                      className="rounded-circle me-2"
-                      style={{ width: '40px', height: '40px' }}
-                    >
-                      <FaHeart />
-                    </Button>
-                    <Button 
-                      variant="light" 
-                      size="sm" 
-                      className="rounded-circle"
-                      style={{ width: '40px', height: '40px' }}
-                    >
-                      <FaCamera />
-                    </Button>
-                  </div>
-
-                  {/* Tipo de propiedad */}
-                  <div className="position-absolute bottom-0 start-0 p-3" style={{ zIndex: 3 }}>
-                    <Badge 
-                      bg="dark" 
-                      className="fw-bold"
-                      style={{
-                        fontSize: '0.8rem',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '20px',
-                        backgroundColor: 'rgba(0,0,0,0.7) !important'
-                      }}
-                    >
-                      {property.tipo}
-                    </Badge>
-                  </div>
-                </div>
-
-                <Card.Body className="p-4">
-                  <div className="d-flex justify-content-between align-items-start mb-3">
-                    <h5 className="fw-bold text-dark mb-0" style={{ fontSize: '1.1rem' }}>
-                      {property.titulo}
-                    </h5>
-                    <div className="text-end">
-                      <h4 className="fw-bold text-primary mb-0">
-                        {formatPrice(property.precio, property.moneda, property.operacion)}
-                      </h4>
-                    </div>
-                  </div>
-
-                  <div className="d-flex align-items-center text-muted mb-3">
-                    <FaMapMarkerAlt className="me-2" style={{ color: '#ff6b35' }} />
-                    <span>{property.ubicacion.ciudad}, {property.ubicacion.direccion}</span>
-                  </div>
-
-                  <Row className="g-3 mb-3">
-                    <Col xs={4}>
-                      <div className="text-center">
-                        <div className="d-flex align-items-center justify-content-center mb-1">
-                          <FaBed style={{ color: '#6f42c1', fontSize: '1.2rem' }} />
-                        </div>
-                        <small className="text-muted">Habitaciones</small>
-                        <div className="fw-bold">{property.caracteristicas.habitaciones}</div>
-                      </div>
-                    </Col>
-                    <Col xs={4}>
-                      <div className="text-center">
-                        <div className="d-flex align-items-center justify-content-center mb-1">
-                          <FaBath style={{ color: '#17a2b8', fontSize: '1.2rem' }} />
-                        </div>
-                        <small className="text-muted">Baños</small>
-                        <div className="fw-bold">{property.caracteristicas.baños}</div>
-                      </div>
-                    </Col>
-                    <Col xs={4}>
-                      <div className="text-center">
-                        <div className="d-flex align-items-center justify-content-center mb-1">
-                          <FaRulerCombined style={{ color: '#28a745', fontSize: '1.2rem' }} />
-                        </div>
-                        <small className="text-muted">Área</small>
-                        <div className="fw-bold">{property.caracteristicas.area}m²</div>
-                      </div>
-                    </Col>
-                  </Row>
-
-                  {/* Amenidades */}
-                  {property.amenidades.length > 0 && (
-                    <div className="mb-3">
-                      <small className="text-muted fw-semibold">Amenidades:</small>
-                      <div className="d-flex flex-wrap gap-1 mt-1">
-                        {property.amenidades.slice(0, 3).map((amenity, idx) => (
-                          <Badge 
-                            key={idx}
-                            bg="light" 
-                            text="dark" 
-                            className="fw-normal"
-                            style={{ fontSize: '0.7rem' }}
-                          >
-                            {amenity}
-                          </Badge>
-                        ))}
-                        {property.amenidades.length > 3 && (
-                          <Badge 
-                            bg="secondary" 
-                            className="fw-normal"
-                            style={{ fontSize: '0.7rem' }}
-                          >
-                            +{property.amenidades.length - 3}
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="d-grid gap-2">
-                    <Link 
-                      to={`/propiedad/${property._id}`}
-                      style={{ textDecoration: 'none' }}
-                    >
-                      <Button 
-                        variant="outline-primary" 
-                        className="fw-bold w-100"
-                        style={{
-                          borderColor: '#6f42c1',
-                          color: '#6f42c1',
-                          borderWidth: '2px',
-                          borderRadius: '25px'
-                        }}
-                      >
-                        <FaEye className="me-2" />
-                        Ver Detalles
-                      </Button>
-                    </Link>
-                  </div>
-                </Card.Body>
-              </Card>
+              <PropertyCardNew
+                id={property._id}
+                titulo={property.titulo}
+                precio={property.precio}
+                moneda={property.moneda}
+                ubicacion={property.ubicacion}
+                caracteristicas={property.caracteristicas}
+                imagenes={property.imagenes}
+                tipo={property.tipo}
+                estado={property.estado}
+                destacado={property.destacado}
+                amenidades={property.amenidades}
+                operacion={property.operacion}
+                getImageUrl={getImageUrl}
+                animationDelay={index * 100}
+                onCameraClick={() => console.log(`Ver galería de ${property.titulo}`)}
+                onHeartClick={() => console.log(`Agregar a favoritos ${property.titulo}`)}
+              />
             </Col>
           ))}
         </Row>

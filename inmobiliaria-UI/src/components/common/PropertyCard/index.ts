@@ -2,7 +2,11 @@
  * PropertyCard - Componente reutilizable para mostrar tarjetas de propiedades
  */
 
-export { default } from './PropertyCard';
+export { default as PropertyCardNew } from './PropertyCardNew';
+export { default } from './PropertyCardNew';
+
+// Exportar componentes internos para uso independiente
+export * from './components';
 
 // Exportar tipos desde el archivo de tipos
 export type {

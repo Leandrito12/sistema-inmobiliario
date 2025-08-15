@@ -16,6 +16,7 @@ export type { SectionProps } from './Section';
 
 // PropertyCard
 export { default as PropertyCard } from './PropertyCard';
+export { PropertyCardNew } from './PropertyCard';
 export type { 
   PropertyCardProps, 
   PropertyLocation, 

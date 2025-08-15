@@ -38,6 +38,12 @@ export interface PropertyCardProps {
   className?: string;
   /** Callback cuando se hace clic en la cámara */
   onCameraClick?: () => void;
+  /** Callback cuando se hace clic en favoritos */
+  onHeartClick?: () => void;
+  /** Array de amenidades */
+  amenidades?: string[];
+  /** Tipo de operación */
+  operacion?: 'venta' | 'alquiler';
 }
 
 // Re-exportar tipos globales para conveniencia
