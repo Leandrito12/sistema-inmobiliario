@@ -3,10 +3,20 @@
  */
 
 export { default } from './PropertyCard';
+
+// Exportar tipos desde el archivo de tipos
 export type {
   PropertyCardProps,
   PropertyLocation,
   PropertyCharacteristics,
   PropertyImage,
   PropertyStatus
-} from './PropertyCard';
+} from './types';
+
+// Exportar utilidades
+export {
+  formatPrice,
+  capitalizeStatus,
+  getStatusBadgeColor,
+  getMainImage
+} from './utils';

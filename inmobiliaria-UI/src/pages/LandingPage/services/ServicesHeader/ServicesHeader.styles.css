@@ -1,0 +1,51 @@
+/**
+ * Estilos para el componente ServicesHeader
+ */
+
+.services-header-title {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.2;
+}
+
+.services-header-subtitle {
+  color: #6f42c1;
+  background: linear-gradient(135deg, #6f42c1 0%, #4834d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.services-header-description {
+  max-width: 600px;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+/* Efectos hover para mejorar la experiencia */
+.services-header-subtitle {
+  transition: all 0.3s ease;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .services-header-title {
+    margin-bottom: 1rem;
+  }
+  
+  .services-header-description {
+    font-size: 1rem;
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .services-header-title {
+    font-size: 1.8rem;
+  }
+  
+  .services-header-description {
+    font-size: 0.95rem;
+  }
+}

@@ -2,74 +2,9 @@ import React from 'react';
 import { Card, Badge, Row, Col } from 'react-bootstrap';
 import { FaBed, FaBath, FaRulerCombined, FaMapMarkerAlt, FaCamera } from 'react-icons/fa';
 import Button from '../Button';
+import type { PropertyCardProps } from './types';
+import { formatPrice, capitalizeStatus, getStatusBadgeColor, getMainImage } from './utils';
 import './PropertyCard.styles.css';
-
-/**
- * Información de ubicación de la propiedad
- */
-export interface PropertyLocation {
-  direccion: string;
-  ciudad: string;
-  estado: string;
-  codigoPostal: string;
-}
-
-/**
- * Características de la propiedad
- */
-export interface PropertyCharacteristics {
-  habitaciones: number;
-  baños: number;
-  area: number;
-}
-
-/**
- * Imagen de la propiedad
- */
-export interface PropertyImage {
-  url: string;
-  alt: string;
-  esPortada: boolean;
-}
-
-/**
- * Estados posibles de una propiedad
- */
-export type PropertyStatus = 'disponible' | 'vendido' | 'alquilado' | 'reservado';
-
-/**
- * Props del componente PropertyCard
- */
-export interface PropertyCardProps {
-  /** ID único de la propiedad */
-  id: string;
-  /** Título de la propiedad */
-  titulo: string;
-  /** Precio de la propiedad */
-  precio: number;
-  /** Moneda del precio */
-  moneda: string;
-  /** Ubicación de la propiedad */
-  ubicacion: PropertyLocation;
-  /** Características de la propiedad */
-  caracteristicas: PropertyCharacteristics;
-  /** Array de imágenes */
-  imagenes: PropertyImage[];
-  /** Tipo de propiedad */
-  tipo: string;
-  /** Estado actual */
-  estado: PropertyStatus;
-  /** Si es propiedad destacada */
-  destacado?: boolean;
-  /** Índice para animaciones */
-  animationDelay?: number;
-  /** Función para obtener URL de imagen */
-  getImageUrl?: (imagePath: string) => string;
-  /** Clases CSS adicionales */
-  className?: string;
-  /** Callback cuando se hace clic en la cámara */
-  onCameraClick?: () => void;
-}
 
 /**
  * PropertyCard - Componente reutilizable para mostrar propiedades
@@ -91,58 +26,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   className = '',
   onCameraClick
 }) => {
-  /**
-   * Formatea el precio con moneda
-   */
-  const formatPrice = (price: number, currency: string): string => {
-    const formatter = new Intl.NumberFormat('es-ES', {
-      style: 'currency',
-      currency: currency === 'USD' ? 'USD' : 'ARS',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    });
-    return formatter.format(price);
-  };
-
-  /**
-   * Capitaliza el estado
-   */
-  const capitalizeStatus = (status: string): string => {
-    const statusMap: Record<string, string> = {
-      'disponible': 'Disponible',
-      'vendido': 'Vendido',
-      'alquilado': 'Alquilado',
-      'reservado': 'Reservado'
-    };
-    return statusMap[status] || status;
-  };
-
-  /**
-   * Obtiene el color del badge según el estado
-   */
-  const getStatusBadgeColor = (status: PropertyStatus): string => {
-    switch (status) {
-      case 'disponible':
-        return 'success';
-      case 'vendido':
-        return 'danger';
-      case 'alquilado':
-        return 'warning';
-      case 'reservado':
-        return 'info';
-      default:
-        return 'secondary';
-    }
-  };
-
-  /**
-   * Obtiene la imagen de portada
-   */
-  const getMainImage = (): string => {
-    const mainImage = imagenes.find(img => img.esPortada)?.url || imagenes[0]?.url || '';
-    return getImageUrl(mainImage);
-  };
-
   const cardClasses = [
     'property-card',
     'h-100',
@@ -161,7 +44,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         <div
           className="property-card__image"
           style={{
-            backgroundImage: `url(${getMainImage()})`
+            backgroundImage: `url(${getMainImage(imagenes, getImageUrl)})`
           }}
         />
         

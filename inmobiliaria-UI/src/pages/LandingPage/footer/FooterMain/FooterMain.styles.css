@@ -1,0 +1,30 @@
+/* FooterMain Styles */
+
+.footer-main {
+  /* Estilos específicos para la sección principal del footer */
+}
+
+/* Estilos para el logo de la empresa */
+.footer-main h4 {
+  transition: all 0.3s ease;
+}
+
+.footer-main h4:hover {
+  transform: scale(1.02);
+}
+
+/* Estilos para el texto descriptivo */
+.footer-main p {
+  text-align: justify;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .footer-main .d-flex {
+    justify-content: center;
+  }
+  
+  .footer-main p {
+    text-align: center;
+  }
+}

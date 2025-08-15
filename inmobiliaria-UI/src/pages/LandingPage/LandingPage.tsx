@@ -1,17 +1,15 @@
 import React from 'react';
 
 // Componentes de la landing page
-import Hero from '../components/Hero';
-import FeaturedProperties from '../components/FeaturedProperties';
-import Services from '../components/Services';
-import Footer from '../components/Footer';
+import Hero from './hero';
+import Services from './services';
+import Footer from './footer';
 
 /**
  * LandingPage - Página principal del sitio inmobiliario
  * 
  * Estructura:
  * - Hero: Sección principal con call-to-action
- * - FeaturedProperties: Propiedades destacadas
  * - Services: Servicios que ofrecemos
  * - Footer: Información de contacto y enlaces
  */
@@ -20,9 +18,6 @@ const LandingPage: React.FC = () => {
     <>
       {/* Sección Hero */}
       <Hero />
-      
-      {/* Propiedades Destacadas */}
-      <FeaturedProperties />
       
       {/* Servicios */}
       <Services />

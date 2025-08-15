@@ -1,0 +1,70 @@
+/**
+ * Estilos para el componente ServicesGrid
+ */
+
+.services-grid {
+  margin-bottom: 2rem;
+}
+
+.services-grid-item {
+  transition: transform 0.3s ease;
+}
+
+.services-grid-item:hover {
+  transform: translateY(-5px);
+}
+
+/* Asegurar que todas las tarjetas tengan la misma altura */
+.services-grid-item .service-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.services-grid-item .service-card .card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Efectos de animación */
+.services-grid-item {
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.services-grid-item:nth-child(1) { animation-delay: 0.1s; }
+.services-grid-item:nth-child(2) { animation-delay: 0.2s; }
+.services-grid-item:nth-child(3) { animation-delay: 0.3s; }
+.services-grid-item:nth-child(4) { animation-delay: 0.4s; }
+.services-grid-item:nth-child(5) { animation-delay: 0.5s; }
+.services-grid-item:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .services-grid {
+    margin-bottom: 1.5rem;
+  }
+  
+  .services-grid-item {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .services-grid-item:hover {
+    transform: none; /* Deshabilitar hover en móvil */
+  }
+}

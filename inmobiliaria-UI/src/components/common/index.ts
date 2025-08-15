@@ -23,3 +23,15 @@ export type {
   PropertyImage, 
   PropertyStatus 
 } from './PropertyCard';
+
+// ContactCard
+export { default as ContactCard } from './ContactCard';
+export type { ContactCardProps } from './ContactCard';
+
+// SocialButton
+export { default as SocialButton } from './SocialButton';
+export type { SocialButtonProps } from './SocialButton';
+
+// FooterSection
+export { default as FooterSection } from './FooterSection';
+export type { FooterSectionProps, FooterLink } from './FooterSection';

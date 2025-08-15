@@ -1,6 +1,6 @@
 # Scripts de Inicio del Servidor
 
-Este directorio contiene varios scripts para iniciar el servidor backend de forma fácil y con verificaciones automáticas.
+Este directorio contiene scripts para iniciar el servidor backend de forma fácil y con verificaciones automáticas.
 
 ## 🚀 Scripts Disponibles
 
@@ -22,18 +22,9 @@ Este directorio contiene varios scripts para iniciar el servidor backend de form
 .\start-server-simple.ps1
 ```
 
-### 3. `start-server-complete.ps1` (PowerShell Completo)
-
-**Archivo**: Script PowerShell con verificaciones adicionales
-**Uso**: Desde PowerShell
-
-```powershell
-.\start-server-complete.ps1
-```
-
 ## 🔧 Qué Hacen los Scripts
 
-Todos los scripts realizan las siguientes verificaciones y acciones:
+Ambos scripts realizan las siguientes verificaciones y acciones:
 
 1. **Detener procesos existentes**: Mata procesos Node.js que puedan estar corriendo
 2. **Verificar puerto**: Comprueba si el puerto 5001 está libre

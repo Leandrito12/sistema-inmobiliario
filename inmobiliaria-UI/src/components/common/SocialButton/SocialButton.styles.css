@@ -1,0 +1,41 @@
+/* SocialButton Styles */
+.social-button {
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease !important;
+  border-width: 2px !important;
+}
+
+.social-button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Tamaños */
+.social-button--sm {
+  width: 40px;
+  height: 40px;
+  font-size: 1rem;
+}
+
+.social-button--lg {
+  width: 50px;
+  height: 50px;
+  font-size: 1.25rem;
+}
+
+/* Variantes */
+.social-button--outline:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.social-button--filled {
+  color: white !important;
+  border: none !important;
+}
+
+.social-button--filled:hover {
+  opacity: 0.9;
+}

@@ -14,6 +14,7 @@ import {
   FaEye
 } from 'react-icons/fa';
 import { API_ENDPOINTS } from '../config/api';
+import { formatPrice, capitalizeStatus, getStatusBadgeColor } from '../utils/propertyUtils';
 
 interface Property {
   _id: string;
@@ -216,32 +217,6 @@ const PropertiesView: React.FC = () => {
       status: '',
       amenities: []
     });
-  };
-
-  const formatPrice = (price: number, currency: string, operation: string) => {
-    const currencySymbol = currency === 'USD' ? '$' : 
-                           currency === 'EUR' ? '€' : 
-                           currency === 'ARS' ? 'AR$' : 
-                           currency === 'BRL' ? 'R$' : '$';
-    
-    if (operation === 'alquiler') {
-      return `${currencySymbol}${price.toLocaleString()}/mes`;
-    }
-    return `${currencySymbol}${price.toLocaleString()}`;
-  };
-
-  const capitalizeStatus = (status: string) => {
-    return status.charAt(0).toUpperCase() + status.slice(1);
-  };
-
-  const getStatusBadgeColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'disponible': return 'primary';
-      case 'vendido': return 'danger';
-      case 'alquilado': return 'info';
-      case 'reservado': return 'warning';
-      default: return 'primary';
-    }
   };
 
   if (loading) {
