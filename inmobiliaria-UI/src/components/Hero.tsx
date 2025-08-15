@@ -1,8 +1,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
-import Section from './common/Section';
-import Button from './common/Button';
+import { Section, Button } from './common';
 
 /**
  * Componente Hero - Sección principal de la landing page

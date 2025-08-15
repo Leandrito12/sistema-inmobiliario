@@ -8,9 +8,7 @@ import {
   FaShieldAlt, 
   FaUsers 
 } from 'react-icons/fa';
-import Section from './common/Section';
-import ServiceCard from './common/ServiceCard';
-import Button from './common/Button';
+import { Section, ServiceCard, Button } from './common';
 
 interface Service {
   id: number;

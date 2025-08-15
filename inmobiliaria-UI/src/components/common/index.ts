@@ -13,3 +13,13 @@ export type { ServiceCardProps } from './ServiceCard';
 // Section
 export { default as Section } from './Section';
 export type { SectionProps } from './Section';
+
+// PropertyCard
+export { default as PropertyCard } from './PropertyCard';
+export type { 
+  PropertyCardProps, 
+  PropertyLocation, 
+  PropertyCharacteristics, 
+  PropertyImage, 
+  PropertyStatus 
+} from './PropertyCard';
