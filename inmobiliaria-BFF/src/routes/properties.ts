@@ -12,6 +12,7 @@ import {
   setImageAsCover,
   reorderPropertyImages,
   getPropertyImageStats,
+  updatePropertyStatus,
 } from "../controllers/propertyController";
 import {
   getImageInfo,
@@ -58,6 +59,9 @@ router.put(
   updateProperty
 );
 router.delete("/:id", deleteProperty);
+
+// Ruta para cambiar estado de propiedad
+router.put("/:id/status", updatePropertyStatus);
 
 // Rutas específicas para gestión de imágenes
 router.post(

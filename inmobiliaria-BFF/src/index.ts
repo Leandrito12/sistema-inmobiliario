@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/database";
 import authRoutes from "./routes/auth";
 import propertyRoutes from "./routes/properties";
+import amenityRoutes from "./routes/amenities";
 import { errorHandler } from "./middleware/errorHandler";
 
 // Configurar variables de entorno - Actualizado puerto 5001
@@ -56,9 +57,36 @@ app.use(morgan("combined"));
 // Servir archivos estáticos (imágenes)
 app.use("/uploads", express.static("uploads"));
 
+// Endpoint de prueba para verificar configuración de uploads
+app.get("/test-uploads", (req, res) => {
+  const fs = require('fs');
+  const path = require('path');
+  
+  const uploadsPath = path.join(__dirname, '../uploads/properties');
+  
+  try {
+    const files = fs.existsSync(uploadsPath) ? fs.readdirSync(uploadsPath) : [];
+    res.json({
+      success: true,
+      message: "Test de configuración de uploads",
+      uploadsPath: uploadsPath,
+      absolutePath: path.resolve(uploadsPath),
+      filesCount: files.length,
+      files: files.slice(0, 10), // Solo mostrar primeros 10 archivos
+      staticRoute: "/uploads configurado correctamente"
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: error?.message || "Error al acceder a uploads"
+    });
+  }
+});
+
 // Rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/properties", propertyRoutes);
+app.use("/api/amenities", amenityRoutes);
 
 // Ruta de salud
 app.get("/health", (req, res) => {

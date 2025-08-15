@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Card, Alert, Badge } from 'react-bootstrap';
+import { API_ENDPOINTS } from '../config/api';
 
 interface PropertyForm {
   title: string;
   price: number;
+  currency: string;
   location: string;
   type: string;
   bedrooms: number;
@@ -17,6 +19,10 @@ interface PropertyForm {
   state: string;
   city: string;
   address: string;
+  // Campo destacado
+  destacado: boolean;
+  // Estado de la propiedad
+  status: string;
 }
 
 interface ImagePreview {
@@ -24,10 +30,22 @@ interface ImagePreview {
   preview: string;
 }
 
+interface Amenity {
+  _id: string;
+  name: string;
+  category: string;
+  description?: string;
+}
+
 const AdminPropertyForm: React.FC = () => {
+  // Estado para las amenidades desde la base de datos
+  const [availableAmenities, setAvailableAmenities] = useState<Amenity[]>([]);
+  const [loadingAmenities, setLoadingAmenities] = useState(true);
+
   const [formData, setFormData] = useState<PropertyForm>({
     title: '',
     price: 0,
+    currency: 'ARS',
     location: '',
     type: 'casa',
     bedrooms: 0,
@@ -39,24 +57,71 @@ const AdminPropertyForm: React.FC = () => {
     postalCode: '',
     state: '',
     city: '',
-    address: ''
+    address: '',
+    // Campo destacado
+    destacado: false,
+    // Estado de la propiedad
+    status: 'disponible'
   });
   const [images, setImages] = useState<ImagePreview[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [featureInput, setFeatureInput] = useState('');
+  const [amenitySearch, setAmenitySearch] = useState('');
+  const [showAmenityDropdown, setShowAmenityDropdown] = useState(false);
   
   const navigate = useNavigate();
   const { id } = useParams();
   const isEditing = Boolean(id);
 
   useEffect(() => {
-    if (isEditing) {
-      fetchProperty();
-    }
+    const loadData = async () => {
+      // Cargar amenidades al montar el componente
+      await fetchAmenities();
+      
+      if (isEditing) {
+        await fetchProperty();
+      }
+    };
+    
+    loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, isEditing]);
+
+  // Función para obtener amenidades desde la API
+  const fetchAmenities = async () => {
+    try {
+      setLoadingAmenities(true);
+      const response = await fetch(API_ENDPOINTS.AMENITIES.BASE);
+      
+      if (response.ok) {
+        const result = await response.json();
+        setAvailableAmenities(result.data || []);
+      } else {
+        console.error('Error al cargar amenidades');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoadingAmenities(false);
+    }
+  };
+
+  // Cerrar dropdown cuando se hace clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('.position-relative')) {
+        setShowAmenityDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Función para obtener la URL de imagen correcta
   const getImageUrl = (imagePath: string) => {
@@ -98,6 +163,7 @@ const AdminPropertyForm: React.FC = () => {
         setFormData({
           title: property.titulo || '',
           price: property.precio || 0,
+          currency: property.moneda || 'ARS',
           location: property.ubicacion?.direccion || '',
           type: property.tipo || 'casa',
           bedrooms: property.caracteristicas?.habitaciones || 0,
@@ -109,13 +175,17 @@ const AdminPropertyForm: React.FC = () => {
           postalCode: property.ubicacion?.codigoPostal || '',
           state: property.ubicacion?.estado || '',
           city: property.ubicacion?.ciudad || '',
-          address: property.ubicacion?.direccion || ''
+          address: property.ubicacion?.direccion || '',
+          // Campo destacado
+          destacado: property.destacado || false,
+          // Estado de la propiedad
+          status: property.estado || 'disponible'
         });
         
         // Mapear imágenes existentes con URLs corregidas
         if (property.imagenes && Array.isArray(property.imagenes)) {
-          const correctedImages = property.imagenes.map((img: any) => {
-            const imagePath = img.url || img;
+          const correctedImages = property.imagenes.map((img: string | { url: string }) => {
+            const imagePath = typeof img === 'string' ? img : img.url;
             return getImageUrl(imagePath);
           });
           setExistingImages(correctedImages);
@@ -130,11 +200,13 @@ const AdminPropertyForm: React.FC = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
     
     setFormData(prev => ({
       ...prev,
-      [name]: (name === 'price' || name === 'bedrooms' || name === 'bathrooms' || name === 'area') 
+      [name]: type === 'checkbox' ? checked :
+        (name === 'price' || name === 'bedrooms' || name === 'bathrooms' || name === 'area') 
         ? (value === '' ? 0 : Number(value))
         : value
     }));
@@ -168,14 +240,27 @@ const AdminPropertyForm: React.FC = () => {
     setExistingImages(prev => prev.filter((_, i) => i !== index));
   };
 
-  const addFeature = () => {
-    if (featureInput.trim() && !formData.features.includes(featureInput.trim())) {
+  // Función para filtrar amenidades basada en la búsqueda
+  const getFilteredAmenities = () => {
+    return availableAmenities
+      .filter(amenity => !formData.features.includes(amenity.name))
+      .filter(amenity => 
+        amenity.name.toLowerCase().includes(amenitySearch.toLowerCase()) ||
+        amenity.category.toLowerCase().includes(amenitySearch.toLowerCase())
+      )
+      .slice(0, 10); // Limitar a 10 resultados para mejor performance
+  };
+
+  // Función para manejar la selección de una amenidad
+  const handleAmenitySelect = (amenityName: string) => {
+    if (!formData.features.includes(amenityName)) {
       setFormData(prev => ({
         ...prev,
-        features: [...prev.features, featureInput.trim()]
+        features: [...prev.features, amenityName]
       }));
-      setFeatureInput('');
     }
+    setAmenitySearch('');
+    setShowAmenityDropdown(false);
   };
 
   const removeFeature = (index: number) => {
@@ -198,11 +283,12 @@ const AdminPropertyForm: React.FC = () => {
       // Mapear datos del formulario al formato esperado por el backend
       formDataToSend.append('titulo', formData.title);
       formDataToSend.append('precio', formData.price.toString());
+      formDataToSend.append('moneda', formData.currency);
       formDataToSend.append('descripcion', formData.description);
       formDataToSend.append('tipo', formData.type);
       formDataToSend.append('operacion', 'venta'); // Valor por defecto
-      formDataToSend.append('estado', 'disponible'); // Valor por defecto
-      formDataToSend.append('destacado', 'false'); // Valor por defecto
+      formDataToSend.append('estado', formData.status); // Estado de la propiedad
+      formDataToSend.append('destacado', formData.destacado.toString()); // Campo destacado
       
       // Ubicación como objeto JSON (estructura exacta que espera el backend)
       const ubicacion = {
@@ -317,16 +403,34 @@ const AdminPropertyForm: React.FC = () => {
                     </Col>
                     <Col md={6}>
                       <Form.Group className="mb-3">
-                        <Form.Label className="fw-semibold">Precio (ARS)</Form.Label>
-                        <Form.Control
-                          type="number"
-                          name="price"
-                          value={formData.price === 0 ? '' : formData.price}
-                          onChange={handleChange}
-                          required
-                          className="rounded-custom"
-                          placeholder="Ej: 250000"
-                        />
+                        <Form.Label className="fw-semibold">Precio</Form.Label>
+                        <div className="d-flex gap-2">
+                          <div style={{ width: '120px' }}>
+                            <Form.Select
+                              name="currency"
+                              value={formData.currency}
+                              onChange={handleChange}
+                              required
+                              className="rounded-custom"
+                            >
+                              <option value="ARS">ARS</option>
+                              <option value="USD">USD</option>
+                              <option value="EUR">EUR</option>
+                              <option value="BRL">BRL</option>
+                            </Form.Select>
+                          </div>
+                          <div className="flex-grow-1">
+                            <Form.Control
+                              type="number"
+                              name="price"
+                              value={formData.price === 0 ? '' : formData.price}
+                              onChange={handleChange}
+                              required
+                              className="rounded-custom"
+                              placeholder="Ej: 250000"
+                            />
+                          </div>
+                        </div>
                       </Form.Group>
                     </Col>
                   </Row>
@@ -490,26 +594,119 @@ const AdminPropertyForm: React.FC = () => {
                   </Form.Group>
 
                   <Form.Group className="mb-3">
-                    <Form.Label className="fw-semibold">Características</Form.Label>
-                    <div className="d-flex gap-2 mb-2">
-                      <Form.Control
-                        type="text"
-                        value={featureInput}
-                        onChange={(e) => setFeatureInput(e.target.value)}
-                        placeholder="Ej: Piscina, Garage, Jardín"
-                        className="rounded-custom"
-                        onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addFeature())}
+                    <div className="d-flex align-items-center p-3 bg-secondary rounded-custom border">
+                      <Form.Check
+                        type="checkbox"
+                        id="destacado"
+                        name="destacado"
+                        checked={formData.destacado}
+                        onChange={handleChange}
+                        className="me-3"
+                        style={{
+                          transform: 'scale(1.2)',
+                          accentColor: '#0d6efd'
+                        }}
                       />
-                      <Button
-                        type="button"
-                        variant="outline-primary"
-                        onClick={addFeature}
-                        className="rounded-custom"
-                      >
-                        <i className="fas fa-plus"></i>
-                      </Button>
+                      <div>
+                        <label htmlFor="destacado" className="fw-semibold text-white mb-1" style={{ cursor: 'pointer' }}>
+                          <i className="fas fa-star me-2 text-warning"></i>
+                          Marcar como propiedad destacada
+                        </label>
+                        <div className="text-light small">
+                          Las propiedades destacadas aparecerán en la sección principal de la página web
+                        </div>
+                      </div>
                     </div>
-                    <div className="d-flex flex-wrap gap-2">
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label className="fw-semibold">Estado de la Propiedad</Form.Label>
+                    <Form.Select
+                      name="status"
+                      value={formData.status}
+                      onChange={handleChange}
+                      required
+                      className="rounded-custom"
+                    >
+                      <option value="disponible">Disponible</option>
+                      <option value="vendido">Vendido</option>
+                      <option value="alquilado">Alquilado</option>
+                      <option value="reservado">Reservado</option>
+                    </Form.Select>
+                    <Form.Text className="text-muted">
+                      <i className="fas fa-info-circle me-1"></i>
+                      Las propiedades vendidas, alquiladas o reservadas aparecerán con un overlay gris en las imágenes
+                    </Form.Text>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label className="fw-semibold">Características y Amenidades</Form.Label>
+                    <div className="position-relative">
+                      <div className="d-flex gap-2 mb-2">
+                        <div className="flex-grow-1 position-relative">
+                          <Form.Control
+                            type="text"
+                            value={amenitySearch}
+                            onChange={(e) => {
+                              setAmenitySearch(e.target.value);
+                              setShowAmenityDropdown(true);
+                            }}
+                            onFocus={() => setShowAmenityDropdown(true)}
+                            placeholder="Buscar amenidades... (ej: piscina, seguridad, garage)"
+                            className="rounded-custom"
+                          />
+                          {showAmenityDropdown && amenitySearch.length > 0 && (
+                            <div 
+                              className="position-absolute w-100 bg-white border rounded-custom shadow-sm mt-1" 
+                              style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}
+                            >
+                              {loadingAmenities ? (
+                                <div className="px-3 py-2 text-center text-muted">
+                                  <span className="spinner-border spinner-border-sm me-2"></span>
+                                  Cargando amenidades...
+                                </div>
+                              ) : getFilteredAmenities().length > 0 ? (
+                                getFilteredAmenities().map((amenity) => (
+                                  <div
+                                    key={amenity._id}
+                                    className="px-3 py-2 cursor-pointer hover-bg-light border-bottom"
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={() => handleAmenitySelect(amenity.name)}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.backgroundColor = '#f8f9fa';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.backgroundColor = 'white';
+                                    }}
+                                  >
+                                    <div className="fw-semibold">{amenity.name}</div>
+                                    <small className="text-muted">{amenity.category}</small>
+                                  </div>
+                                ))
+                              ) : (
+                                <div className="px-3 py-2 text-muted">
+                                  No se encontraron amenidades que coincidan
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline-secondary"
+                          onClick={() => {
+                            setAmenitySearch('');
+                            setShowAmenityDropdown(false);
+                          }}
+                          className="rounded-custom"
+                          title="Limpiar búsqueda"
+                        >
+                          <i className="fas fa-times"></i>
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <div className="d-flex flex-wrap gap-2 mb-2">
                       {formData.features.map((feature, index) => (
                         <Badge
                           key={index}
@@ -526,6 +723,20 @@ const AdminPropertyForm: React.FC = () => {
                         </Badge>
                       ))}
                     </div>
+                    
+                    {formData.features.length === 0 && (
+                      <Form.Text className="text-muted">
+                        <i className="fas fa-search me-1"></i>
+                        Busque y seleccione las amenidades y características de la propiedad
+                      </Form.Text>
+                    )}
+                    
+                    {formData.features.length > 0 && (
+                      <Form.Text className="text-success">
+                        <i className="fas fa-check me-1"></i>
+                        {formData.features.length} amenidad{formData.features.length !== 1 ? 'es' : ''} seleccionada{formData.features.length !== 1 ? 's' : ''}
+                      </Form.Text>
+                    )}
                   </Form.Group>
 
                   <Form.Group className="mb-3">

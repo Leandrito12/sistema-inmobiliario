@@ -24,7 +24,7 @@ if %errorlevel%==0 (
 
 echo.
 echo Iniciando Backend con correcciones (Puerto 5001)...
-start "Backend-Corregido" cmd /c "cd /d f:\CURSOS\inmobiliaria\inmobiliaria-BFF && echo BACKEND CON CORRECCIONES INICIADO && npm run dev"
+start "Backend-Corregido" cmd /c "cd /d "%~dp0inmobiliaria-BFF" && echo BACKEND CON CORRECCIONES INICIADO && npm run dev"
 
 echo.
 echo Esperando 4 segundos para que inicie el backend...
@@ -32,7 +32,7 @@ timeout /t 4 /nobreak >nul
 
 echo.
 echo Iniciando Frontend (Puerto 5173)...
-start "Frontend" cmd /c "cd /d f:\CURSOS\inmobiliaria\inmobiliaria-UI && npm run dev"
+start "Frontend" cmd /c "cd /d "%~dp0inmobiliaria-UI" && npm run dev"
 
 echo.
 echo Esperando 5 segundos para que inicie el frontend...

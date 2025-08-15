@@ -454,6 +454,43 @@ export const reorderPropertyImages = asyncHandler(
   }
 );
 
+// @desc    Cambiar estado de una propiedad
+// @route   PUT /api/properties/:id/status
+// @access  Private (Admin)
+export const updatePropertyStatus = asyncHandler(
+  async (req: AuthRequest, res: Response) => {
+    const { estado } = req.body;
+
+    // Validar que el estado sea uno de los permitidos
+    const validStates = ["disponible", "vendido", "alquilado", "reservado"];
+    if (!validStates.includes(estado)) {
+      return res.status(400).json({
+        success: false,
+        message: "Estado no válido. Estados permitidos: " + validStates.join(", "),
+      });
+    }
+
+    const property = await Property.findById(req.params.id);
+
+    if (!property) {
+      return res.status(404).json({
+        success: false,
+        message: "Propiedad no encontrada",
+      });
+    }
+
+    // Actualizar solo el estado
+    property.estado = estado;
+    await property.save();
+
+    res.json({
+      success: true,
+      message: `Estado de la propiedad actualizado a: ${estado}`,
+      data: { property },
+    });
+  }
+);
+
 // @desc    Obtener estadísticas de imágenes
 // @route   GET /api/properties/:id/images/stats
 // @access  Private (Admin)

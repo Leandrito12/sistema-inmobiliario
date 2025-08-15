@@ -10,6 +10,11 @@ export const API_ENDPOINTS = {
     BASE: `${API_BASE_URL}/properties`,
     BY_ID: (id: string) => `${API_BASE_URL}/properties/${id}`,
   },
+  AMENITIES: {
+    BASE: `${API_BASE_URL}/amenities`,
+    CATEGORIES: `${API_BASE_URL}/amenities/categories`,
+    BY_ID: (id: string) => `${API_BASE_URL}/amenities/${id}`,
+  },
 };
 
 // Headers comunes
