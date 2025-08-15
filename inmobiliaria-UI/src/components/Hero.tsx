@@ -77,34 +77,20 @@ const Hero: React.FC = () => {
                 Simplifica tu búsqueda y toma decisiones con confianza.
               </p>
               
-              <div className="d-flex flex-wrap gap-3">
+              <div className="d-flex justify-content-center">
                 <Link to="/propiedades" style={{ textDecoration: 'none' }}>
                   <Button 
                     size="lg" 
-                    className="fw-bold px-4 py-3"
+                    className="fw-bold px-5 py-3"
                     style={{
                       background: 'linear-gradient(135deg, #ff6b35 0%, #f0932b 100%)',
                       border: 'none',
                       borderRadius: '50px',
-                      fontSize: '1.1rem'
+                      fontSize: '1.2rem'
                     }}
                   >
                     <FaSearch className="me-2" />
                     Buscar Propiedades
-                  </Button>
-                </Link>
-                <Link to="/propiedades" style={{ textDecoration: 'none' }}>
-                  <Button 
-                    variant="outline-light" 
-                    size="lg" 
-                    className="fw-bold px-4 py-3"
-                    style={{
-                      borderWidth: '2px',
-                      borderRadius: '50px',
-                      fontSize: '1.1rem'
-                    }}
-                  >
-                    Ver Catálogo
                   </Button>
                 </Link>
               </div>
