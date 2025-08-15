@@ -107,8 +107,9 @@ const PropertiesView: React.FC = () => {
       }
       
       const data = await response.json();
-      setProperties(data);
-      setFilteredProperties(data);
+      const propertiesData = data.data?.properties || data.properties || data || [];
+      setProperties(propertiesData);
+      setFilteredProperties(propertiesData);
     } catch (err) {
       console.error('Error al cargar propiedades:', err);
       setError('Error al cargar las propiedades. Por favor, inténtalo de nuevo.');
@@ -418,7 +419,7 @@ const PropertiesView: React.FC = () => {
 
         {/* Grid de propiedades */}
         <Row className="g-4">
-          {filteredProperties.map((property, index) => (
+          {Array.isArray(filteredProperties) && filteredProperties.map((property, index) => (
             <Col lg={4} md={6} key={property._id}>
               <Card 
                 className="property-card h-100 border-0 shadow-sm"
@@ -637,7 +638,7 @@ const PropertiesView: React.FC = () => {
         </Row>
 
         {/* Mensaje cuando no hay resultados */}
-        {filteredProperties.length === 0 && (
+        {Array.isArray(filteredProperties) && filteredProperties.length === 0 && (
           <div className="text-center py-5" data-aos="fade-up">
             <div style={{ color: '#6f42c1', fontSize: '4rem', marginBottom: '1rem' }}>
               <FaSearch />
@@ -657,7 +658,7 @@ const PropertiesView: React.FC = () => {
         )}
 
         {/* Botón cargar más */}
-        {filteredProperties.length > 0 && filteredProperties.length >= 9 && (
+        {Array.isArray(filteredProperties) && filteredProperties.length > 0 && filteredProperties.length >= 9 && (
           <div className="text-center mt-5" data-aos="fade-up">
             <Button 
               size="lg"
