@@ -1,45 +1,26 @@
 import React from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Container, Row, Col } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
+import Section from './common/Section';
+import Button from './common/Button';
 
+/**
+ * Componente Hero - Sección principal de la landing page
+ * Utiliza componentes reutilizables para el diseño
+ */
 const Hero: React.FC = () => {
   return (
-    <section 
+    <Section
+      background="linear-gradient(135deg, #6f42c1 0%, #4834d4 50%, #ff6b35 100%)"
+      hasDecorations
+      padding="none"
       className="hero-section d-flex align-items-center"
       style={{
-        background: 'linear-gradient(135deg, #6f42c1 0%, #4834d4 50%, #ff6b35 100%)',
         minHeight: '100vh',
         position: 'relative',
         overflow: 'hidden'
       }}
     >
-      {/* Elementos decorativos de fondo */}
-      <div 
-        style={{
-          position: 'absolute',
-          top: '10%',
-          right: '5%',
-          width: '300px',
-          height: '300px',
-          background: 'rgba(255, 255, 255, 0.1)',
-          borderRadius: '50%',
-          filter: 'blur(100px)'
-        }}
-      />
-      <div 
-        style={{
-          position: 'absolute',
-          bottom: '10%',
-          left: '5%',
-          width: '200px',
-          height: '200px',
-          background: 'rgba(255, 107, 53, 0.2)',
-          borderRadius: '50%',
-          filter: 'blur(80px)'
-        }}
-      />
-
       <Container className="h-100" style={{ paddingTop: '80px' }}>
         <Row className="w-100 align-items-center justify-content-center" style={{ minHeight: 'calc(100vh - 80px)' }}>
           <Col lg={8} xl={6} className="text-white d-flex align-items-center justify-content-center">
@@ -78,27 +59,25 @@ const Hero: React.FC = () => {
               </p>
               
               <div className="d-flex justify-content-center">
-                <Link to="/propiedades" style={{ textDecoration: 'none' }}>
-                  <Button 
-                    size="lg" 
-                    className="fw-bold px-5 py-3"
-                    style={{
-                      background: 'linear-gradient(135deg, #ff6b35 0%, #f0932b 100%)',
-                      border: 'none',
-                      borderRadius: '50px',
-                      fontSize: '1.2rem'
-                    }}
-                  >
-                    <FaSearch className="me-2" />
-                    Buscar Propiedades
-                  </Button>
-                </Link>
+                <Button
+                  variant="gradient-primary"
+                  size="lg"
+                  icon={<FaSearch className="me-2" />}
+                  to="/propiedades"
+                  rounded
+                  className="fw-bold px-5 py-3"
+                  style={{
+                    fontSize: '1.2rem'
+                  }}
+                >
+                  Buscar Propiedades
+                </Button>
               </div>
             </div>
           </Col>
         </Row>
       </Container>
-    </section>
+    </Section>
   );
 };
 

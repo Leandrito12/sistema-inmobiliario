@@ -12,6 +12,8 @@ export interface SectionProps {
   id?: string;
   /** Clases CSS adicionales */
   className?: string;
+  /** Estilos CSS inline adicionales */
+  style?: React.CSSProperties;
   /** Color de fondo */
   background?: string;
   /** Si debe usar Container de Bootstrap */
@@ -36,6 +38,7 @@ const Section: React.FC<SectionProps> = ({
   children,
   id,
   className = '',
+  style = {},
   background,
   containerized = true,
   padding = 'lg',
@@ -69,7 +72,8 @@ const Section: React.FC<SectionProps> = ({
       style={{
         background,
         position,
-        overflow
+        overflow,
+        ...style
       }}
     >
       {/* Elementos decorativos de fondo */}

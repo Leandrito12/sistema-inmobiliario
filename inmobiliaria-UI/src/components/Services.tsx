@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import { 
   FaHome, 
   FaSearch, 
@@ -8,6 +8,9 @@ import {
   FaShieldAlt, 
   FaUsers 
 } from 'react-icons/fa';
+import Section from './common/Section';
+import ServiceCard from './common/ServiceCard';
+import Button from './common/Button';
 
 interface Service {
   id: number;
@@ -17,6 +20,10 @@ interface Service {
   color: string;
 }
 
+/**
+ * Componente Services - Muestra los servicios ofrecidos
+ * Utiliza componentes reutilizables para mantener consistencia
+ */
 const Services: React.FC = () => {
   const services: Service[] = [
     {
@@ -63,141 +70,82 @@ const Services: React.FC = () => {
     }
   ];
 
+  const handleServiceClick = (serviceTitle: string) => {
+    console.log(`Servicio seleccionado: ${serviceTitle}`);
+    // Aquí podrías agregar lógica para mostrar más detalles del servicio
+  };
+
+  const handleConsultaClick = () => {
+    console.log('Solicitud de consulta gratuita');
+    // Aquí podrías agregar lógica para abrir un formulario de contacto
+  };
+
   return (
-    <section 
+    <Section 
       id="servicios" 
-      className="py-5"
-      style={{ 
-        backgroundColor: '#ffffff',
-        position: 'relative'
-      }}
+      background="#ffffff"
+      hasDecorations
+      themeColor="#6f42c1"
     >
-      {/* Elementos decorativos */}
-      <div 
-        style={{
-          position: 'absolute',
-          top: '20%',
-          right: '0',
-          width: '150px',
-          height: '150px',
-          background: 'linear-gradient(135deg, #6f42c1, #ff6b35)',
-          borderRadius: '50%',
-          opacity: 0.1,
-          filter: 'blur(60px)'
-        }}
-      />
-      <div 
-        style={{
-          position: 'absolute',
-          bottom: '20%',
-          left: '0',
-          width: '100px',
-          height: '100px',
-          background: 'linear-gradient(135deg, #ff6b35, #6f42c1)',
-          borderRadius: '50%',
-          opacity: 0.1,
-          filter: 'blur(40px)'
-        }}
-      />
+      <div className="text-center mb-5" data-aos="fade-up">
+        <h2 className="display-4 fw-bold text-dark mb-3">
+          Nuestros <span style={{ color: '#6f42c1' }}>Servicios</span>
+        </h2>
+        <p className="lead text-muted mx-auto" style={{ maxWidth: '600px' }}>
+          Ofrecemos una gama completa de servicios inmobiliarios diseñados 
+          para hacer tu experiencia más fácil, segura y exitosa.
+        </p>
+      </div>
 
-      <Container>
-        <div className="text-center mb-5" data-aos="fade-up">
-          <h2 className="display-4 fw-bold text-dark mb-3">
-            Nuestros <span style={{ color: '#6f42c1' }}>Servicios</span>
-          </h2>
-          <p className="lead text-muted mx-auto" style={{ maxWidth: '600px' }}>
-            Ofrecemos una gama completa de servicios inmobiliarios diseñados 
-            para hacer tu experiencia más fácil, segura y exitosa.
-          </p>
-        </div>
+      <Row className="g-4">
+        {services.map((service, index) => (
+          <Col lg={4} md={6} key={service.id}>
+            <ServiceCard
+              title={service.title}
+              description={service.description}
+              icon={service.icon}
+              color={service.color}
+              onClick={() => handleServiceClick(service.title)}
+              data-aos="fade-up"
+              data-aos-delay={index * 100}
+            />
+          </Col>
+        ))}
+      </Row>
 
-        <Row className="g-4">
-          {services.map((service, index) => (
-            <Col lg={4} md={6} key={service.id}>
-              <Card 
-                className="service-card h-100 border-0 shadow-sm"
-                style={{ 
-                  borderRadius: '20px',
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer'
-                }}
-                data-aos="fade-up"
-                data-aos-delay={index * 100}
-              >
-                <Card.Body className="p-4 text-center">
-                  <div 
-                    className="service-icon mx-auto mb-4 d-flex align-items-center justify-content-center"
-                    style={{
-                      width: '80px',
-                      height: '80px',
-                      borderRadius: '50%',
-                      background: `linear-gradient(135deg, ${service.color}15 0%, ${service.color}25 100%)`,
-                      color: service.color,
-                      fontSize: '2rem',
-                      transition: 'all 0.3s ease'
-                    }}
-                  >
-                    {service.icon}
-                  </div>
-                  
-                  <h5 className="fw-bold text-dark mb-3">
-                    {service.title}
-                  </h5>
-                  
-                  <p className="text-muted mb-0" style={{ lineHeight: 1.6 }}>
-                    {service.description}
-                  </p>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-
-        <div className="text-center mt-5" data-aos="fade-up">
-          <div className="row justify-content-center">
-            <div className="col-lg-8">
-              <div 
-                className="p-5 rounded"
+      <div className="text-center mt-5" data-aos="fade-up">
+        <div className="row justify-content-center">
+          <div className="col-lg-8">
+            <div 
+              className="p-5 rounded"
+              style={{
+                background: 'linear-gradient(135deg, #6f42c1 0%, #4834d4 100%)',
+                color: 'white'
+              }}
+            >
+              <h3 className="fw-bold mb-3">¿Listo para comenzar?</h3>
+              <p className="mb-4 opacity-75">
+                Nuestro equipo de expertos está preparado para ayudarte en cada paso del camino. 
+                Desde la primera consulta hasta la entrega de llaves.
+              </p>
+              <Button
+                variant="light"
+                size="lg"
+                onClick={handleConsultaClick}
+                rounded
+                className="fw-bold px-5 py-3"
                 style={{
-                  background: 'linear-gradient(135deg, #6f42c1 0%, #4834d4 100%)',
-                  color: 'white'
+                  fontSize: '1.1rem',
+                  color: '#6f42c1'
                 }}
               >
-                <h3 className="fw-bold mb-3">¿Listo para comenzar?</h3>
-                <p className="mb-4 opacity-75">
-                  Nuestro equipo de expertos está preparado para ayudarte en cada paso del camino. 
-                  Desde la primera consulta hasta la entrega de llaves.
-                </p>
-                <button 
-                  className="btn btn-light fw-bold px-5 py-3"
-                  style={{
-                    borderRadius: '50px',
-                    fontSize: '1.1rem',
-                    color: '#6f42c1'
-                  }}
-                >
-                  Consulta Gratuita
-                </button>
-              </div>
+                Consulta Gratuita
+              </Button>
             </div>
           </div>
         </div>
-      </Container>
-
-      <style>
-        {`
-          .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
-          }
-          
-          .service-card:hover .service-icon {
-            transform: scale(1.1);
-            box-shadow: 0 10px 30px rgba(111, 66, 193, 0.3);
-          }
-        `}
-      </style>
-    </section>
+      </div>
+    </Section>
   );
 };
 
